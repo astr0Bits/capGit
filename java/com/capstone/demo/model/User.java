@@ -6,42 +6,44 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
 @Data
 public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    @NotBlank
-    private String name;
+	@NotBlank
+	private String name;
 
-    @Email
-    @Column(unique = true)
-    private String email;
+	@Email
+	@Column(unique = true)
+	private String email;
 
-    @NotBlank
-    private String password;
+	@NotBlank
+	private String password;
 
-    @Enumerated(EnumType.STRING)
-    private Role role; // LEARNER, TEACHER, SPONSOR
+	@Enumerated(EnumType.STRING)
+	private Role role; // LEARNER, TEACHER, SPONSOR
 
-    private boolean emailVerified = false;
-    private String verificationToken;
-    private LocalDateTime createdAt;
-    private double credits = 0;
+	private boolean emailVerified = false;
+	private String verificationToken;
+	private LocalDateTime createdAt;
+	private double credits = 0;
 
-    @ElementCollection
-    @CollectionTable(name = "user_password_history", joinColumns = @JoinColumn(name = "user_id"))
-    @Column(name = "password")
-    private List<String> passwordHistory = new ArrayList<>();
+	@ElementCollection
+	@CollectionTable(name = "user_password_history", joinColumns = @JoinColumn(name = "user_id"))
+	@Column(name = "password")
+	private List<String> passwordHistory = new ArrayList<>();
 
-    public enum Role {
-        LEARNER, TEACHER, SPONSOR
-    }
+	public enum Role {
+		LEARNER, TEACHER, SPONSOR
+	}
 
 	public Long getId() {
 		return id;
@@ -122,5 +124,13 @@ public class User {
 	public void setPasswordHistory(List<String> passwordHistory) {
 		this.passwordHistory = passwordHistory;
 	}
-    
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(
+			name = "user_skills",
+			joinColumns = @JoinColumn(name = "user_id"),
+			inverseJoinColumns = @JoinColumn(name = "skill_id")
+			)
+	private Set<Skill> skills = new HashSet<>();
+
+
 }
