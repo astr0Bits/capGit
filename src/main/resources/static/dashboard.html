@@ -1,0 +1,1531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkillSwap Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-foreground: #ffffff;
+            --background: #f9fafb;
+            --foreground: #111827;
+            --card: #ffffff;
+            --card-foreground: #111827;
+            --muted: #f3f4f6;
+            --muted-foreground: #6b7280;
+            --accent: #f3f4f6;
+            --accent-foreground: #111827;
+            --border: #e5e7eb;
+            --radius: 0.5rem;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--background);
+            color: var(--foreground);
+            line-height: 1.5;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        /* Navigation - Consistent with other pages */
+        .nav {
+            background: rgba(255, 255, 255, 0.9);
+            border-bottom: 1px solid var(--border);
+            backdrop-filter: blur(6px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1100px;
+            margin: auto;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            font-size: 22px;
+            font-weight: 600;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        /* Buttons - Consistent with other pages */
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            border: none;
+        }
+
+        .btn:focus {
+            outline: 2px solid var(--primary);
+            outline-offset: 2px;
+        }
+
+        .btn-default {
+            background: var(--primary);
+            color: var(--primary-foreground);
+        }
+
+        .btn-default:hover {
+            background: #4338ca;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--foreground);
+        }
+
+        .btn-outline:hover {
+            background: var(--accent);
+        }
+
+        .btn-ghost {
+            background: transparent;
+            color: var(--foreground);
+        }
+
+        .btn-ghost:hover {
+            background: var(--accent);
+        }
+
+        .btn-link {
+            background: transparent;
+            color: var(--primary);
+            padding: 0;
+            height: auto;
+        }
+
+        .btn-link:hover {
+            text-decoration: underline;
+            background: transparent;
+        }
+
+        .btn-sm {
+            padding: 0.375rem 0.75rem;
+            font-size: 0.75rem;
+        }
+
+        .btn-icon {
+            padding: 0.5rem;
+            width: 2.5rem;
+            height: 2.5rem;
+        }
+
+        /* Card Styles - Consistent with other pages */
+        .card {
+            background-color: var(--card);
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+        }
+
+        .card-header {
+            padding: 1.5rem 1.5rem 0;
+        }
+
+        .card-content {
+            padding: 1.5rem;
+        }
+
+        .card-title {
+            font-size: 0.875rem;
+            font-weight: 600;
+            line-height: 1;
+        }
+
+        .card-description {
+            font-size: 0.875rem;
+            color: var(--muted-foreground);
+            margin-top: 0.25rem;
+        }
+
+        /* Avatar Styles */
+        .avatar {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            overflow: hidden;
+            background-color: var(--muted);
+        }
+
+        .avatar-sm {
+            width: 2rem;
+            height: 2rem;
+        }
+
+        .avatar-md {
+            width: 3rem;
+            height: 3rem;
+        }
+
+        .avatar-lg {
+            width: 4rem;
+            height: 4rem;
+        }
+
+        .avatar-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Badge Styles */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            border-radius: 9999px;
+            border: 1px solid transparent;
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 0.125rem 0.625rem;
+            white-space: nowrap;
+        }
+
+        .badge-default {
+            background-color: var(--primary);
+            color: var(--primary-foreground);
+        }
+
+        .badge-secondary {
+            background-color: var(--muted);
+            color: var(--muted-foreground);
+        }
+
+        .badge-outline {
+            background-color: transparent;
+            border-color: var(--border);
+            color: var(--foreground);
+        }
+
+        /* Dropdown Styles */
+        .dropdown {
+            position: relative;
+        }
+
+        .dropdown-content {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 0.5rem;
+            width: 14rem;
+            background-color: var(--card);
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            z-index: 50;
+            display: none;
+        }
+
+        .dropdown-content.show {
+            display: block;
+        }
+
+        .dropdown-label {
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .dropdown-separator {
+            height: 1px;
+            background-color: var(--border);
+            margin: 0.25rem 0;
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+            cursor: pointer;
+            border: none;
+            background: none;
+            text-align: left;
+        }
+
+        .dropdown-item:hover {
+            background-color: var(--accent);
+        }
+
+        .dropdown-item i {
+            margin-right: 0.5rem;
+            width: 1rem;
+            height: 1rem;
+        }
+
+        /* Grid Layout */
+        .grid {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .grid-cols-1 {
+            grid-template-columns: repeat(1, minmax(0, 1fr));
+        }
+
+        .grid-cols-2 {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .grid-cols-5 {
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+        }
+
+        @media (min-width: 768px) {
+            .md\:grid-cols-2 {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .lg\:grid-cols-2 {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+            
+            .lg\:grid-cols-5 {
+                grid-template-columns: repeat(5, minmax(0, 1fr));
+            }
+            
+            .lg\:col-span-1 {
+                grid-column: span 1 / span 1;
+            }
+        }
+
+        /* Utility Classes */
+        .text-xs {
+            font-size: 0.75rem;
+        }
+
+        .text-sm {
+            font-size: 0.875rem;
+        }
+
+        .text-xl {
+            font-size: 1.25rem;
+        }
+
+        .text-2xl {
+            font-size: 1.5rem;
+        }
+
+        .text-muted {
+            color: var(--muted-foreground);
+        }
+
+        .text-primary {
+            color: var(--primary);
+        }
+
+        .text-yellow-500 {
+            color: #eab308;
+        }
+
+        .text-blue-500 {
+            color: #3b82f6;
+        }
+
+        .text-orange-500 {
+            color: #f97316;
+        }
+
+        .text-purple-500 {
+            color: #a855f7;
+        }
+
+        .text-green-500 {
+            color: #22c55e;
+        }
+
+        .text-gray-300 {
+            color: #d1d5db;
+        }
+
+        .bg-accent {
+            background-color: var(--accent);
+        }
+
+        .bg-blue-500\/10 {
+            background-color: rgba(59, 130, 246, 0.1);
+        }
+
+        .bg-green-500\/10 {
+            background-color: rgba(34, 197, 94, 0.1);
+        }
+
+        .bg-purple-500\/10 {
+            background-color: rgba(168, 85, 247, 0.1);
+        }
+
+        .bg-yellow-500\/10 {
+            background-color: rgba(234, 179, 8, 0.1);
+        }
+
+        .bg-red-500 {
+            background-color: #ef4444;
+        }
+
+        .rounded-full {
+            border-radius: 9999px;
+        }
+
+        .rounded-lg {
+            border-radius: var(--radius);
+        }
+
+        .p-2 {
+            padding: 0.5rem;
+        }
+
+        .p-3 {
+            padding: 0.75rem;
+        }
+
+        .p-4 {
+            padding: 1rem;
+        }
+
+        .pt-6 {
+            padding-top: 1.5rem;
+        }
+
+        .pb-2 {
+            padding-bottom: 0.5rem;
+        }
+
+        .gap-2 {
+            gap: 0.5rem;
+        }
+
+        .gap-3 {
+            gap: 0.75rem;
+        }
+
+        .gap-4 {
+            gap: 1rem;
+        }
+
+        .gap-0\.5 {
+            gap: 0.125rem;
+        }
+
+        .space-y-3 > * + * {
+            margin-top: 0.75rem;
+        }
+
+        .space-y-4 > * + * {
+            margin-top: 1rem;
+        }
+
+        .space-y-6 > * + * {
+            margin-top: 1.5rem;
+        }
+
+        .mb-4 {
+            margin-bottom: 1rem;
+        }
+
+        .mb-6 {
+            margin-bottom: 1.5rem;
+        }
+
+        .mb-8 {
+            margin-bottom: 2rem;
+        }
+
+        .mt-1 {
+            margin-top: 0.25rem;
+        }
+
+        .mr-1 {
+            margin-right: 0.25rem;
+        }
+
+        .mr-2 {
+            margin-right: 0.5rem;
+        }
+
+        .ml-1 {
+            margin-left: 0.25rem;
+        }
+
+        .flex {
+            display: flex;
+        }
+
+        .inline-flex {
+            display: inline-flex;
+        }
+
+        .flex-col {
+            flex-direction: column;
+        }
+
+        .flex-row {
+            flex-direction: row;
+        }
+
+        .items-center {
+            align-items: center;
+        }
+
+        .items-start {
+            align-items: flex-start;
+        }
+
+        .justify-between {
+            justify-content: space-between;
+        }
+
+        .justify-center {
+            justify-content: center;
+        }
+
+        .flex-1 {
+            flex: 1 1 0%;
+        }
+
+        .flex-wrap {
+            flex-wrap: wrap;
+        }
+
+        .min-w-0 {
+            min-width: 0;
+        }
+
+        .min-h-screen {
+            min-height: 100vh;
+        }
+
+        .w-4 {
+            width: 1rem;
+        }
+
+        .w-5 {
+            width: 1.25rem;
+        }
+
+        .w-6 {
+            width: 1.5rem;
+        }
+
+        .w-8 {
+            width: 2rem;
+        }
+
+        .w-12 {
+            width: 3rem;
+        }
+
+        .w-16 {
+            width: 4rem;
+        }
+
+        .w-56 {
+            width: 14rem;
+        }
+
+        .h-4 {
+            height: 1rem;
+        }
+
+        .h-5 {
+            height: 1.25rem;
+        }
+
+        .h-6 {
+            height: 1.5rem;
+        }
+
+        .h-8 {
+            height: 2rem;
+        }
+
+        .h-12 {
+            height: 3rem;
+        }
+
+        .h-16 {
+            height: 4rem;
+        }
+
+        .h-auto {
+            height: auto;
+        }
+
+        .relative {
+            position: relative;
+        }
+
+        .absolute {
+            position: absolute;
+        }
+
+        .top-0 {
+            top: 0;
+        }
+
+        .top-2 {
+            top: 0.5rem;
+        }
+
+        .right-0 {
+            right: 0;
+        }
+
+        .right-2 {
+            right: 0.5rem;
+        }
+
+        .cursor-pointer {
+            cursor: pointer;
+        }
+
+        .transition-colors {
+            transition-property: color, background-color, border-color;
+            transition-duration: 0.15s;
+            transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .transition-shadow {
+            transition-property: box-shadow;
+            transition-duration: 0.15s;
+            transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .hover\:bg-accent\/50:hover {
+            background-color: rgba(241, 245, 249, 0.5);
+        }
+
+        .hover\:bg-primary:hover {
+            background-color: var(--primary);
+        }
+
+        .hover\:text-primary-foreground:hover {
+            color: var(--primary-foreground);
+        }
+
+        .hover\:shadow-md:hover {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        /* Star Rating */
+        .star-rating {
+            display: flex;
+            gap: 0.125rem;
+        }
+
+        .star {
+            width: 1rem;
+            height: 1rem;
+            color: #eab308;
+        }
+
+        .star-filled {
+            fill: currentColor;
+        }
+
+        .star-empty {
+            color: #d1d5db;
+        }
+
+        /* Notification Badge */
+        .notification-badge {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            width: 0.5rem;
+            height: 0.5rem;
+            background-color: #ef4444;
+            border-radius: 50%;
+        }
+
+        /* Background circles - Consistent with other pages */
+        .bg-circle {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.4;
+            z-index: -1;
+        }
+
+        .circle-1 {
+            width: 350px;
+            height: 350px;
+            background: #93c5fd;
+            top: 5%;
+            right: 5%;
+        }
+
+        .circle-2 {
+            width: 300px;
+            height: 300px;
+            background: #f9a8d4;
+            bottom: 10%;
+            left: 10%;
+        }
+
+        .circle-3 {
+            width: 450px;
+            height: 450px;
+            background: #a7f3d0;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        /* Hidden utility */
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Background circles - Consistent with other pages -->
+    <div class="bg-circle circle-1"></div>
+    <div class="bg-circle circle-2"></div>
+    <div class="bg-circle circle-3"></div>
+
+    <!-- Top Navigation Bar -->
+    <header class="nav">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <!-- Book Icon -->
+                <svg width="28" height="28" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M2 4a2 2 0 0 1 2-2h6v18H4a2 2 0 0 1-2-2V4zm10-2h6a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-6V2z"/>
+                </svg>
+                <span>SkillSwap</span>
+            </a>
+
+            <div class="header-actions">
+               <!--<button class="btn btn-ghost btn-icon">
+                    <i class="fas fa-comment w-5 h-5"></i>
+                </button>
+                <button class="btn btn-ghost btn-icon relative">
+                    <i class="fas fa-bell w-5 h-5"></i>
+                    <span class="notification-badge"></span>
+                </button>-->
+
+                <div class="dropdown">
+                    <button class="btn btn-ghost flex items-center gap-2" id="user-menu-button">
+                        <div class="avatar avatar-sm">
+                            <img class="avatar-img" id="user-avatar" src="" alt="User avatar">
+                        </div>
+                        <span id="user-name">User</span>
+                    </button>
+                    <div class="dropdown-content" id="user-menu">
+                        <div class="dropdown-label">My Account</div>
+                        <div class="dropdown-separator"></div>
+                        <button class="dropdown-item">
+                            <i class="fas fa-user"></i>
+                            My Profile
+                        </button>
+                        <button class="dropdown-item">
+                            <i class="fas fa-cog"></i>
+                            Settings
+                        </button>
+                        <div class="dropdown-separator"></div>
+                        <button class="dropdown-item" id="logout-button">
+                            <i class="fas fa-sign-out-alt"></i>
+                            Log Out
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container p-4 py-8">
+        <!-- Summary Cards - Top Row -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
+            <div class="card lg:col-span-1">
+                <div class="card-header flex flex-row items-center justify-between pb-2">
+                    <div class="card-title">Welcome</div>
+                    <i class="fas fa-sparkles w-4 h-4 text-primary"></i>
+                </div>
+                <div class="card-content">
+                    <div class="text-2xl" id="welcome-name">User</div>
+                    <p class="text-xs text-muted mt-1" id="user-location">Dubai</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header flex flex-row items-center justify-between pb-2">
+                    <div class="card-title">Reputation Score</div>
+                    <i class="fas fa-award w-4 h-4 text-muted"></i>
+                </div>
+                <div class="card-content">
+                    <div class="text-2xl" id="reputation-score">245</div>
+                    <p class="text-xs text-muted mt-1">
+                        <i class="fas fa-trending-up w-3 h-3 inline mr-1"></i>
+                        +12 this week
+                    </p>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header flex flex-row items-center justify-between pb-2">
+                    <div class="card-title">Total Sessions</div>
+                    <i class="fas fa-calendar w-4 h-4 text-muted"></i>
+                </div>
+                <div class="card-content">
+                    <div class="text-2xl" id="total-sessions">42</div>
+                    <p class="text-xs text-muted mt-1" id="session-breakdown">25 learning, 17 teaching</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header flex flex-row items-center justify-between pb-2">
+                    <div class="card-title">Overall Rating</div>
+                    <i class="fas fa-star w-4 h-4 text-yellow-500 star-filled"></i>
+                </div>
+                <div class="card-content">
+                    <div class="text-2xl" id="overall-rating">4.5</div>
+                    <div class="star-rating mt-1" id="rating-stars"></div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header flex flex-row items-center justify-between pb-2">
+                    <div class="card-title">Credits</div>
+                    <i class="fas fa-trophy w-4 h-4 text-muted"></i>
+                </div>
+                <div class="card-content">
+                    <div class="text-2xl" id="credits">120</div>
+                    <button class="btn btn-link btn-sm mt-1">
+                        View rewards →
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Middle Section - Upcoming Sessions & Notifications -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+            <!-- Upcoming Sessions -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Upcoming Sessions</div>
+                    <div class="card-description">Your scheduled learning and teaching sessions</div>
+                </div>
+                <div class="card-content space-y-4" id="upcoming-sessions">
+                    <!-- Sessions will be populated by JavaScript -->
+                </div>
+            </div>
+
+            <!-- Notifications -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Notifications</div>
+                    <div class="card-description">Recent updates and alerts</div>
+                </div>
+                <div class="card-content space-y-3" id="notifications-list">
+                    <!-- Notifications will be populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Role Toggle -->
+        <div class="flex items-center justify-center gap-2 mb-6">
+            <button class="btn btn-default" id="learner-view-btn">Learner View</button>
+            <button class="btn btn-outline" id="mentor-view-btn">Mentor View</button>
+        </div>
+
+        <!-- Personalized Recommendations & Metrics -->
+        <div>
+            <h2 class="text-2xl mb-6">Personalized Recommendations & Metrics</h2>
+
+            <!-- LEARNER-FOCUSED CONTENT -->
+            <div id="learner-content" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Recommended Mentors -->
+                <div class="space-y-4">
+                    <h3 class="text-xl">Recommended Mentors For You</h3>
+                    <div id="recommended-mentors">
+                        <!-- Mentors will be populated by JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Recommended Skills & Learning Stats -->
+                <div class="space-y-4">
+                    <!-- Recommended Skills -->
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">Recommended Skills</div>
+                            <div class="card-description">Based on your interests and goals</div>
+                        </div>
+                        <div class="card-content" id="recommended-skills">
+                            <!-- Skills will be populated by JavaScript -->
+                        </div>
+                    </div>
+
+                    <!-- Learning Statistics -->
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">Learning Statistics</div>
+                            <div class="card-description">Your learning journey progress</div>
+                        </div>
+                        <div class="card-content space-y-4" id="learning-stats">
+                            <!-- Stats will be populated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MENTOR-FOCUSED CONTENT -->
+            <div id="mentor-content" class="hidden grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Session Management -->
+                <div class="space-y-4">
+                    <!-- Pending Requests -->
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">Pending Requests</div>
+                            <div class="card-description">New session requests awaiting your response</div>
+                        </div>
+                        <div class="card-content space-y-3" id="pending-requests">
+                            <!-- Requests will be populated by JavaScript -->
+                        </div>
+                    </div>
+
+                    <!-- Awaiting Completion -->
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">Awaiting Completion</div>
+                            <div class="card-description">Mark these sessions as complete</div>
+                        </div>
+                        <div class="card-content space-y-3" id="awaiting-completion">
+                            <!-- Sessions will be populated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Teaching Statistics -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Teaching Stats</div>
+                        <div class="card-description">Your impact as a mentor</div>
+                    </div>
+                    <div class="card-content space-y-4" id="teaching-stats">
+                        <!-- Stats will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+	<script>
+	    // DOM Elements
+	    const userMenuButton = document.getElementById('user-menu-button');
+	    const userMenu = document.getElementById('user-menu');
+	    const logoutButton = document.getElementById('logout-button');
+	    const learnerViewBtn = document.getElementById('learner-view-btn');
+	    const mentorViewBtn = document.getElementById('mentor-view-btn');
+	    const learnerContent = document.getElementById('learner-content');
+	    const mentorContent = document.getElementById('mentor-content');
+
+	    // API utility functions
+	    const API_BASE_URL = 'http://localhost:8080/api';
+
+	    async function apiCall(endpoint, options = {}) {
+	        const token = localStorage.getItem('token');
+	        
+	        const config = {
+	            headers: {
+	                'Content-Type': 'application/json',
+	                ...(token && { 'Authorization': `Bearer ${token}` })
+	            },
+	            ...options
+	        };
+	        
+	        try {
+	            const response = await fetch(`${API_BASE_URL}${endpoint}`, config);
+	            
+	            if (response.status === 401) {
+	                // Token expired or invalid
+	                localStorage.removeItem('token');
+	                localStorage.removeItem('user');
+	                window.location.href = 'login.html';
+	                return null;
+	            }
+	            
+	            if (!response.ok) {
+	                throw new Error(`API error: ${response.status}`);
+	            }
+	            
+	            return await response.json();
+	        } catch (error) {
+	            console.error('API call failed:', error);
+	            return null;
+	        }
+	    }
+
+	    // Check authentication on page load
+	    function checkAuth() {
+	        const token = localStorage.getItem('token');
+	        const user = localStorage.getItem('user');
+	        
+	        if (!token || !user) {
+	            window.location.href = 'login.html';
+	            return null;
+	        }
+	        
+	        return JSON.parse(user);
+	    }
+
+	    // Initialize the dashboard - FIXED VERSION
+	    document.addEventListener('DOMContentLoaded', async function() {
+	        // Check authentication
+	        const user = checkAuth();
+	        if (!user) return;
+	        
+	        console.log('Loading dashboard for user:', user);
+	        
+	        // Set user data from localStorage
+	        document.getElementById('user-avatar').src = "";
+	        document.getElementById('user-name').textContent = user.name || user.email;
+	        document.getElementById('welcome-name').textContent = user.name ? user.name.split(" ")[0] : user.email;
+	        document.getElementById('user-location').textContent = user.location || 'Dubai';
+	        
+	        try {
+	            // Load user stats from API
+	            const statsData = await apiCall('/users/stats');
+	            if (statsData) {
+	                updateUserStats(statsData);
+	            } else {
+	                // Fallback to mock stats if API fails
+	                loadMockStats();
+	            }
+	            
+	            // Load notifications from API
+	            const notificationsData = await apiCall('/notifications');
+	            if (notificationsData) {
+	                renderNotifications(notificationsData);
+	            } else {
+	                // Fallback to mock notifications
+	                loadMockNotifications();
+	            }
+	            
+	            // Load upcoming sessions from API
+	            const sessionsData = await apiCall('/sessions/my-sessions');
+	            if (sessionsData && Array.isArray(sessionsData)) {
+	                renderUpcomingSessionsFromAPI(sessionsData);
+	            } else {
+	                // Fallback to mock sessions
+	                loadMockSessions();
+	            }
+	            
+	        } catch (error) {
+	            console.error('Error loading dashboard data:', error);
+	            // Load all mock data as fallback
+	            loadAllMockData();
+	        }
+	        
+	        // Render static content that doesn't need API calls
+	        renderRecommendedMentors();
+	        renderRecommendedSkills();
+	        renderLearningStats();
+	        renderPendingRequests();
+	        renderAwaitingCompletion();
+	        renderTeachingStats();
+
+	        // Set default view to learner
+	        setView('learner');
+	    });
+
+	    // Update user stats with real data
+	    function updateUserStats(statsData) {
+	        document.getElementById('reputation-score').textContent = statsData.reputation || 0;
+	        document.getElementById('total-sessions').textContent = statsData.totalSessions || 0;
+	        document.getElementById('session-breakdown').textContent = 
+	            `${statsData.learnerSessions || 0} learning, ${statsData.mentorSessions || 0} teaching`;
+	        document.getElementById('overall-rating').textContent = statsData.rating || 0;
+	        document.getElementById('credits').textContent = statsData.credits || 0;
+	        
+	        // Render star rating
+	        renderStars(statsData.rating || 0, 'rating-stars');
+	    }
+
+	    // Render sessions from API data
+	    function renderUpcomingSessionsFromAPI(sessionsData) {
+	        const container = document.getElementById('upcoming-sessions');
+	        container.innerHTML = '';
+	        
+	        if (sessionsData.length === 0) {
+	            container.innerHTML = '<p class="text-muted text-center p-4">No upcoming sessions</p>';
+	            return;
+	        }
+	        
+	        sessionsData.forEach(session => {
+	            const sessionElement = document.createElement('div');
+	            sessionElement.className = 'p-4 border rounded-lg space-y-3';
+	            
+	            // Determine session type based on user role and data
+	            const isTeaching = session.skillOffer && session.skillOffer.teacher;
+	            const sessionType = isTeaching ? 'teaching' : 'learning';
+	            const participantName = isTeaching ? 
+	                (session.learner?.name || 'Learner') : 
+	                (session.skillOffer?.teacher?.name || 'Teacher');
+	            
+	            sessionElement.innerHTML = `
+	                <div class="flex items-start justify-between">
+	                    <div class="flex-1">
+	                        <h4 class="font-medium">${session.skillOffer?.title || 'Skill Session'}</h4>
+	                        <p class="text-sm text-muted">
+	                            ${formatDate(session.createdAt)}, 2:00 PM
+	                        </p>
+	                    </div>
+	                    <div class="badge ${sessionType === 'learning' ? 'badge-secondary' : 'badge-default'}">
+	                        ${sessionType === 'learning' ? 'Learning' : 'Teaching'}
+	                    </div>
+	                </div>
+	                <div class="flex items-center justify-between">
+	                    <div class="flex items-center gap-2">
+	                        <div class="avatar avatar-sm">
+	                        </div>
+	                        <span class="text-sm">${participantName}</span>
+	                    </div>
+	                    <button class="btn btn-default gap-2">
+	                        <i class="fas fa-video w-4 h-4"></i>
+	                        Join Session
+	                    </button>
+	                </div>
+	            `;
+	            
+	            container.appendChild(sessionElement);
+	        });
+	        
+	        // Add "View All Sessions" button
+	        const viewAllButton = document.createElement('button');
+	        viewAllButton.className = 'btn btn-outline w-full';
+	        viewAllButton.textContent = 'View All Sessions';
+	        viewAllButton.onclick = () => alert('View all sessions feature coming soon!');
+	        container.appendChild(viewAllButton);
+	    }
+
+	    // Helper function to format dates
+	    function formatDate(dateString) {
+	        if (!dateString) return 'Soon';
+	        try {
+	            const date = new Date(dateString);
+	            return date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+	        } catch (e) {
+	            return 'Soon';
+	        }
+	    }
+
+	    // Fallback mock data functions
+	    function loadMockStats() {
+	        const mockStats = {
+	            reputation: 245,
+	            totalSessions: 42,
+	            learnerSessions: 25,
+	            mentorSessions: 17,
+	            rating: 4.5,
+	            credits: 120
+	        };
+	        updateUserStats(mockStats);
+	    }
+
+	    function loadMockNotifications() {
+	        const mockNotifications = [
+	            {
+	                id: 1,
+	                type: "request",
+	                message: "New session request from Mohammed Ali",
+	                icon: "calendar",
+	                time: "5 min ago",
+	                color: "text-blue-500",
+	            },
+	            {
+	                id: 2,
+	                type: "reminder",
+	                message: "Reminder: Session with Sarah starts in 2 hours",
+	                icon: "clock",
+	                time: "1 hour ago",
+	                color: "text-orange-500",
+	            }
+	        ];
+	        renderNotifications(mockNotifications);
+	    }
+
+	    function loadMockSessions() {
+	        const mockSessions = [
+	            {
+	                id: 1,
+	                skillOffer: { title: "Advanced Python" },
+	                createdAt: new Date().toISOString(),
+	                learner: { name: "Sarah Ahmed" }
+	            },
+	            {
+	                id: 2,
+	                skillOffer: { title: "Web Development" },
+	                createdAt: new Date().toISOString(),
+	                skillOffer: { teacher: { name: "Ahmed Khan" } }
+	            }
+	        ];
+	        renderUpcomingSessionsFromAPI(mockSessions);
+	    }
+
+	    function loadAllMockData() {
+	        loadMockStats();
+	        loadMockNotifications();
+	        loadMockSessions();
+	    }
+
+	    // Toggle user dropdown menu
+	    userMenuButton.addEventListener('click', function() {
+	        userMenu.classList.toggle('show');
+	    });
+
+	    // Close dropdown when clicking outside
+	    document.addEventListener('click', function(event) {
+	        if (!userMenuButton.contains(event.target) && !userMenu.contains(event.target)) {
+	            userMenu.classList.remove('show');
+	        }
+	    });
+
+	    // Logout functionality
+	    logoutButton.addEventListener('click', function() {
+	        localStorage.removeItem('token');
+	        localStorage.removeItem('user');
+	        window.location.href = 'login.html';
+	    });
+
+	    // Role toggle functionality
+	    learnerViewBtn.addEventListener('click', function() {
+	        setView('learner');
+	    });
+
+	    mentorViewBtn.addEventListener('click', function() {
+	        setView('mentor');
+	    });
+
+	    // Helper functions
+	    function setView(role) {
+	        if (role === 'learner') {
+	            learnerViewBtn.classList.remove('btn-outline');
+	            learnerViewBtn.classList.add('btn-default');
+	            mentorViewBtn.classList.remove('btn-default');
+	            mentorViewBtn.classList.add('btn-outline');
+	            learnerContent.classList.remove('hidden');
+	            mentorContent.classList.add('hidden');
+	        } else {
+	            learnerViewBtn.classList.remove('btn-default');
+	            learnerViewBtn.classList.add('btn-outline');
+	            mentorViewBtn.classList.remove('btn-outline');
+	            mentorViewBtn.classList.add('btn-default');
+	            learnerContent.classList.add('hidden');
+	            mentorContent.classList.remove('hidden');
+	        }
+	    }
+
+	    function renderStars(rating, containerId) {
+	        const container = document.getElementById(containerId);
+	        if (!container) return;
+	        
+	        container.innerHTML = '';
+	        
+	        const fullStars = Math.floor(rating);
+	        const hasHalfStar = rating % 1 !== 0;
+	        
+	        for (let i = 0; i < fullStars; i++) {
+	            const star = document.createElement('i');
+	            star.className = 'fas fa-star star star-filled';
+	            container.appendChild(star);
+	        }
+	        
+	        if (hasHalfStar) {
+	            const star = document.createElement('i');
+	            star.className = 'fas fa-star-half-alt star star-filled';
+	            container.appendChild(star);
+	        }
+	        
+	        const emptyStars = 5 - Math.ceil(rating);
+	        for (let i = 0; i < emptyStars; i++) {
+	            const star = document.createElement('i');
+	            star.className = 'fas fa-star star star-empty';
+	            container.appendChild(star);
+	        }
+	    }
+
+	    function renderNotifications(notificationsData) {
+	        const container = document.getElementById('notifications-list');
+	        if (!container) return;
+	        
+	        container.innerHTML = '';
+	        
+	        notificationsData.forEach(notification => {
+	            const notificationElement = document.createElement('div');
+	            notificationElement.className = 'flex items-start gap-3 p-3 border rounded-lg hover:bg-accent/50 transition-colors cursor-pointer';
+	            
+	            notificationElement.innerHTML = `
+	                <div class="p-2 rounded-full bg-accent ${notification.color}">
+	                    <i class="fas fa-${notification.icon} w-4 h-4"></i>
+	                </div>
+	                <div class="flex-1 min-w-0">
+	                    <p class="text-sm">${notification.message}</p>
+	                    <p class="text-xs text-muted mt-1">
+	                        ${notification.time}
+	                    </p>
+	                </div>
+	            `;
+	            
+	            container.appendChild(notificationElement);
+	        });
+	        
+	        // Add "View All Notifications" button
+	        const viewAllButton = document.createElement('button');
+	        viewAllButton.className = 'btn btn-outline w-full';
+	        viewAllButton.textContent = 'View All Notifications';
+	        viewAllButton.onclick = () => alert('View all notifications feature coming soon!');
+	        container.appendChild(viewAllButton);
+	    }
+
+	    // Keep your existing render functions for static content
+	    function renderRecommendedMentors() {
+	        const container = document.getElementById('recommended-mentors');
+	        if (!container) return;
+	        
+	        container.innerHTML = '';
+	        
+	        const recommendedMentors = [
+	            {
+	                id: 1,
+	                name: "Dr. Fatima Al-Rashid",
+	                avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150",
+	                match: 95,
+	                skills: ["Data Analysis", "SQL"],
+	                rating: 5.0,
+	                sessions: 156,
+	            }
+	        ];
+	        
+	        recommendedMentors.forEach(mentor => {
+	            const mentorElement = document.createElement('div');
+	            mentorElement.className = 'card hover:shadow-md transition-shadow';
+	            
+	            mentorElement.innerHTML = `
+	                <div class="card-content pt-6">
+	                    <div class="flex items-start gap-4 mb-4">
+	                        <div class="avatar avatar-lg">
+	                            <img class="avatar-img" src="${mentor.avatar}" alt="${mentor.name}">
+	                        </div>
+	                        <div class="flex-1">
+	                            <h4 class="font-medium">${mentor.name}</h4>
+	                            <div class="badge badge-secondary mt-1">
+	                                Match: ${mentor.match}%
+	                            </div>
+	                        </div>
+	                    </div>
+	                    <div class="space-y-3">
+	                        <div class="flex flex-wrap gap-2" id="mentor-${mentor.id}-skills">
+	                            <!-- Skills will be added by JavaScript -->
+	                        </div>
+	                        <div class="flex items-center gap-4 text-sm text-muted">
+	                            <div class="flex items-center gap-1" id="mentor-${mentor.id}-rating">
+	                                <!-- Rating stars will be added by JavaScript -->
+	                            </div>
+	                            <span>•</span>
+	                            <span>${mentor.sessions} sessions</span>
+	                        </div>
+	                        <button class="btn btn-default w-full">
+	                            Request Session
+	                        </button>
+	                    </div>
+	                </div>
+	            `;
+	            
+	            container.appendChild(mentorElement);
+	            
+	            // Render skills for this mentor
+	            const skillsContainer = document.getElementById(`mentor-${mentor.id}-skills`);
+	            if (skillsContainer) {
+	                mentor.skills.forEach(skill => {
+	                    const skillBadge = document.createElement('div');
+	                    skillBadge.className = 'badge badge-outline';
+	                    skillBadge.textContent = skill;
+	                    skillsContainer.appendChild(skillBadge);
+	                });
+	            }
+	            
+	            // Render rating for this mentor
+	            const ratingContainer = document.getElementById(`mentor-${mentor.id}-rating`);
+	            if (ratingContainer) {
+	                renderStars(mentor.rating, `mentor-${mentor.id}-rating`);
+	            }
+	        });
+	    }
+
+	    function renderRecommendedSkills() {
+	        const container = document.getElementById('recommended-skills');
+	        if (!container) return;
+	        
+	        container.innerHTML = '';
+	        
+	        const recommendedSkills = ["Machine Learning", "Public Speaking", "UI/UX Design"];
+	        
+	        recommendedSkills.forEach(skill => {
+	            const skillBadge = document.createElement('div');
+	            skillBadge.className = 'badge badge-secondary cursor-pointer hover:bg-primary hover:text-primary-foreground transition-colors';
+	            skillBadge.textContent = skill;
+	            container.appendChild(skillBadge);
+	        });
+	    }
+
+	    function renderLearningStats() {
+	        const container = document.getElementById('learning-stats');
+	        if (!container) return;
+	        
+	        container.innerHTML = '';
+	        
+	        const statsData = [
+	            {
+	                icon: 'calendar',
+	                color: 'text-blue-500',
+	                bgColor: 'bg-blue-500/10',
+	                label: 'Sessions as Learner',
+	                value: 25
+	            },
+	            {
+	                icon: 'bullseye',
+	                color: 'text-green-500',
+	                bgColor: 'bg-green-500/10',
+	                label: 'Skills Learned',
+	                value: 5
+	            },
+	            {
+	                icon: 'trophy',
+	                color: 'text-purple-500',
+	                bgColor: 'bg-purple-500/10',
+	                label: 'Credits Spent',
+	                value: 80
+	            }
+	        ];
+	        
+	        statsData.forEach(stat => {
+	            const statElement = document.createElement('div');
+	            statElement.className = 'flex items-center justify-between p-3 border rounded-lg';
+	            
+	            statElement.innerHTML = `
+	                <div class="flex items-center gap-3">
+	                    <div class="p-2 ${stat.bgColor} rounded-lg">
+	                        <i class="fas fa-${stat.icon} w-5 h-5 ${stat.color}"></i>
+	                    </div>
+	                    <span class="text-sm">${stat.label}</span>
+	                </div>
+	                <span class="text-xl">${stat.value}</span>
+	            `;
+	            
+	            container.appendChild(statElement);
+	        });
+	        
+	        // Add "Explore More Skills" button
+	        const exploreButton = document.createElement('button');
+	        exploreButton.className = 'btn btn-outline w-full';
+	        exploreButton.textContent = 'Explore More Skills';
+	        exploreButton.onclick = () => alert('Explore skills feature coming soon!');
+	        container.appendChild(exploreButton);
+	    }
+
+	    function renderPendingRequests() {
+	        const container = document.getElementById('pending-requests');
+	        if (!container) return;
+	        
+	        container.innerHTML = '<p class="text-muted text-center p-4">No pending requests</p>';
+	    }
+
+	    function renderAwaitingCompletion() {
+	        const container = document.getElementById('awaiting-completion');
+	        if (!container) return;
+	        
+	        container.innerHTML = '<p class="text-muted text-center p-4">No sessions awaiting completion</p>';
+	    }
+
+	    function renderTeachingStats() {
+	        const container = document.getElementById('teaching-stats');
+	        if (!container) return;
+	        
+	        container.innerHTML = '';
+	        
+	        const statsData = [
+	            {
+	                icon: 'calendar',
+	                color: 'text-blue-500',
+	                bgColor: 'bg-blue-500/10',
+	                label: 'Sessions as Mentor',
+	                value: 17
+	            },
+	            {
+	                icon: 'clock',
+	                color: 'text-green-500',
+	                bgColor: 'bg-green-500/10',
+	                label: 'Hours Taught',
+	                value: 22.5
+	            },
+	            {
+	                icon: 'trophy',
+	                color: 'text-purple-500',
+	                bgColor: 'bg-purple-500/10',
+	                label: 'Credits Earned',
+	                value: 210
+	            }
+	        ];
+	        
+	        statsData.forEach(stat => {
+	            const statElement = document.createElement('div');
+	            statElement.className = 'flex items-center justify-between p-4 border rounded-lg';
+	            
+	            statElement.innerHTML = `
+	                <div class="flex items-center gap-3">
+	                    <div class="p-2 ${stat.bgColor} rounded-lg">
+	                        <i class="fas fa-${stat.icon} w-5 h-5 ${stat.color}"></i>
+	                    </div>
+	                    <span>${stat.label}</span>
+	                </div>
+	                <span class="text-2xl">${stat.value}</span>
+	            `;
+	            
+	            container.appendChild(statElement);
+	        });
+	        
+	        // Add "View Teaching History" button
+	        const historyButton = document.createElement('button');
+	        historyButton.className = 'btn btn-outline w-full';
+	        historyButton.textContent = 'View Teaching History';
+	        historyButton.onclick = () => alert('Teaching history feature coming soon!');
+	        container.appendChild(historyButton);
+	    }
+	</script>
+</body>
+</html>

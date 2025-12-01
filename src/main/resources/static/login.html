@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkillSwap - Login</title>
+    <style>
+        /* Global Styles - Applied to all pages */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: #f9fafb;
+            color: #111;
+            min-height: 100vh;
+        }
+
+        /* Navigation - Consistent across all pages */
+        .nav {
+            background: rgba(255, 255, 255, 0.9);
+            border-bottom: 1px solid #e2e8f0;
+            backdrop-filter: blur(6px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1100px;
+            margin: auto;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            font-size: 22px;
+            font-weight: 600;
+            color: #4f46e5;
+            text-decoration: none;
+        }
+
+        /* Buttons - Consistent across all pages */
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            border: none;
+        }
+
+        .btn.primary {
+            background: #4f46e5;
+            color: white;
+        }
+
+        .btn.primary:hover {
+            background: #4338ca;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+        }
+
+        .btn.ghost {
+            background: transparent;
+            border: 1px solid #d1d5db;
+            color: #4b5563;
+        }
+
+        .btn.ghost:hover {
+            background: #f9fafb;
+            border-color: #9ca3af;
+        }
+
+        .btn.large {
+            padding: 12px 28px;
+            font-size: 16px;
+        }
+
+        /* Back Button - Consistent across register and login */
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: transparent;
+            border: none;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer;
+            color: #4b5563;
+            padding: 8px 12px;
+            border-radius: 6px;
+            transition: background 0.2s;
+            text-decoration: none;
+            z-index: 10;
+        }
+
+        .back-btn:hover {
+            background: #f3f4f6;
+        }
+
+        /* Page container for register and login */
+        .page-container {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        /* Background circles - Consistent for register and login */
+        .bg-circle {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.4;
+            z-index: -1;
+        }
+
+        .circle-1 {
+            width: 350px;
+            height: 350px;
+            background: #93c5fd;
+            top: 5%;
+            right: 5%;
+        }
+
+        .circle-2 {
+            width: 300px;
+            height: 300px;
+            background: #f9a8d4;
+            bottom: 10%;
+            left: 10%;
+        }
+
+        .circle-3 {
+            width: 450px;
+            height: 450px;
+            background: #a7f3d0;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        /* Form container - Consistent for register and login */
+        .form-wrapper {
+            width: 100%;
+            max-width: 420px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 40px;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e5e7eb;
+        }
+
+        /* Branding */
+        .logo-center {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .logo-icon {
+            font-size: 32px;
+        }
+
+        .logo-text {
+            font-size: 26px;
+            font-weight: bold;
+            color: #4f46e5;
+        }
+
+        .title {
+            text-align: center;
+            font-size: 28px;
+            margin-bottom: 8px;
+            color: #1f2937;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #6b7280;
+            margin-bottom: 25px;
+        }
+
+        /* Inputs */
+        form label {
+            font-size: 14px;
+            margin-top: 15px;
+            display: block;
+            color: #374151;
+            font-weight: 500;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            font-size: 14px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            margin-top: 6px;
+            transition: border 0.2s;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        /* Role cards */
+        .role-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 6px;
+        }
+
+        .role-card {
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            padding: 14px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .role-card:hover {
+            background: #f9fafb;
+        }
+
+        .role-card input {
+            display: none;
+        }
+
+        .role-card input:checked + .role-content {
+            border: 2px solid #4f46e5;
+            border-radius: 10px;
+            background: #eef2ff;
+        }
+
+        .role-content {
+            text-align: center;
+            padding: 5px;
+            border-radius: 10px;
+            border: 2px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .role-icon {
+            font-size: 28px;
+            margin-bottom: 6px;
+        }
+
+        .role-title {
+            font-weight: bold;
+            color: #1f2937;
+        }
+
+        .role-desc {
+            font-size: 12px;
+            color: #6b7280;
+        }
+
+        /* Terms */
+        .terms {
+            display: flex;
+            align-items: flex-start;
+            margin-top: 15px;
+        }
+
+        .terms input {
+            margin-top: 4px;
+            margin-right: 8px;
+            width: auto;
+        }
+
+        .terms label {
+            margin-top: 0;
+            font-size: 14px;
+            color: #6b7280;
+        }
+
+        .terms a {
+            color: #4f46e5;
+            text-decoration: none;
+        }
+
+        .terms a:hover {
+            text-decoration: underline;
+        }
+
+        /* Strength bar */
+        .strength-wrapper {
+            margin-top: 8px;
+        }
+
+        .strength-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            margin-bottom: 4px;
+            color: #6b7280;
+        }
+
+        .strength-bar {
+            width: 100%;
+            height: 8px;
+            background: #e5e7eb;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        #strengthFill {
+            height: 8px;
+            width: 0%;
+            transition: 0.3s;
+            border-radius: 5px;
+        }
+
+        /* Submit button */
+        .submit-btn {
+            width: 100%;
+            margin-top: 20px;
+            padding: 12px;
+            background: #4f46e5;
+            border: none;
+            color: white;
+            font-size: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .submit-btn:hover {
+            background: #4338ca;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+        }
+
+        .footer-text {
+            margin-top: 15px;
+            font-size: 14px;
+            text-align: center;
+            color: #6b7280;
+        }
+
+        .footer-text a {
+            color: #4f46e5;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .footer-text a:hover {
+            text-decoration: underline;
+        }
+
+        /* Options row for login */
+        .options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+        }
+
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+            color: #6b7280;
+        }
+
+		
+       /* .forgot-btn {
+            background: none;
+            border: none;
+            color: #4f46e5;
+            font-size: 14px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .forgot-btn:hover {
+            text-decoration: underline;
+        }*/
+
+        .signup-text {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 14px;
+            color: #6b7280;
+        }
+
+        .signup-link {
+            color: #4f46e5;
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .signup-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <!-- Book Icon -->
+                <svg width="28" height="28" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M2 4a2 2 0 0 1 2-2h6v18H4a2 2 0 0 1-2-2V4zm10-2h6a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-6V2z"/>
+                </svg>
+                <span>SkillSwap</span>
+            </a>
+
+            <div class="nav-buttons">
+                <a class="btn ghost" href="login.html">Login</a>
+                <a class="btn primary" href="register.html">Sign Up</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="page-container">
+
+        <!-- Background Decorations -->
+        <div class="bg-circle circle-1"></div>
+        <div class="bg-circle circle-2"></div>
+        <div class="bg-circle circle-3"></div>
+
+        <!-- Back Button -->
+        <a href="index.html" class="back-btn">
+            ← Back to Home
+        </a>
+
+        <div class="form-wrapper">
+            <div class="logo-center">
+                <span class="logo-icon">📘</span>
+                <span class="logo-text">SkillSwap</span>
+            </div>
+
+            <h2 class="title">Welcome Back</h2>
+            <p class="subtitle">Login to continue your learning journey</p>
+
+            <form id="loginForm" class="form-box">
+
+                <!-- Email -->
+                <label for="email">Email</label>
+                <input type="email" id="email" placeholder="john@example.com" required>
+
+                <!-- Password -->
+                <label for="password">Password</label>
+                <input type="password" id="password" placeholder="••••••••" required>
+
+                <!-- Options
+                <div class="options">
+                    <a href="#" class="forgot-btn">Forgot password?</a>
+                </div>-->
+
+                <button type="submit" class="submit-btn">Login</button>
+
+                <div class="signup-text">
+                    Don't have an account?
+                    <a href="register.html" class="signup-link">Sign up</a>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+    <script>
+		// Form submission handler
+		document.getElementById('loginForm').addEventListener('submit', async function(e) {
+		    e.preventDefault();
+		    
+		    const formData = {
+		        email: document.getElementById('email').value,
+		        password: document.getElementById('password').value
+		    };
+		    
+		    try {
+		        // Show loading state
+		        const submitBtn = document.querySelector('.submit-btn');
+		        submitBtn.textContent = 'Logging in...';
+		        submitBtn.disabled = true;
+		        
+		        console.log('Sending login request:', formData);
+		        
+		        // Call Spring Boot API
+		        const response = await fetch('http://localhost:8080/api/auth/login', {
+		            method: 'POST',
+		            headers: {
+		                'Content-Type': 'application/json',
+		            },
+		            body: JSON.stringify(formData)
+		        });
+		        
+		        const result = await response.json();
+		        console.log('Login response:', result);
+		        
+		        if (response.ok) {
+		            // Store token and user data - FIXED VERSION
+		            localStorage.setItem('token', result.token);
+		            
+		            const userData = {
+		                id: result.id || result.userId,
+		                email: result.email,
+		                role: result.role || 'LEARNER',
+		                credits: result.credits || 0,
+		                name: result.name || result.email.split('@')[0]
+		            };
+		            localStorage.setItem('user', JSON.stringify(userData));
+		            
+		            console.log('✅ Login successful, user data stored:', userData);
+		            alert('Login successful!');
+		            window.location.href = 'dashboard.html';
+		        } else {
+		            const errorMsg = result.message || result.error || 'Login failed';
+		            alert('Login failed: ' + errorMsg);
+		        }
+		    } catch (error) {
+		        console.error('Error:', error);
+		        alert('Login failed. Please check your connection and try again.');
+		    } finally {
+		        // Reset button
+		        const submitBtn = document.querySelector('.submit-btn');
+		        submitBtn.textContent = 'Login';
+		        submitBtn.disabled = false;
+		    }
+		});
+
+    </script>
+</body>
+</html>
