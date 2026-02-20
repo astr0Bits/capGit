@@ -1,0 +1,2052 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Browse Skills & Mentors | SkillSwap UAE</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Reset & Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #4361ee;
+            --primary-light: rgba(67, 97, 238, 0.1);
+            --secondary: #3a0ca3;
+            --accent: #f72585;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+            --light-gray: #e9ecef;
+            --border: #dee2e6;
+            --success: #4cc9f0;
+            --warning: #f8961e;
+            --border-radius: 12px;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            background-color: #f5f7fb;
+            color: var(--dark);
+            line-height: 1.6;
+            margin-left: 110px; /* Space for slim sidebar */
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        button {
+            cursor: pointer;
+            border: none;
+            background: none;
+            font-family: inherit;
+        }
+
+        .container {
+            max-width: calc(1600px - 110px); /* Account for sidebar */
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Slim Sidebar Navigation */
+        .sidebar {
+            width: 110px;
+            background: white;
+            border-right: 1px solid var(--border);
+            padding: 25px 0;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Center items in slim sidebar */
+            z-index: 1001;
+        }
+
+        .sidebar-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px; /* Larger icon for slim sidebar */
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+            padding: 0 10px 30px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 30px;
+            width: 100%;
+        }
+
+        .nav-links {
+            display: flex;
+            flex-direction: column;
+            gap: 15px; /* More spacing for better touch targets */
+            padding: 0;
+            width: 100%;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: var(--dark);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 15px;
+            border-radius: 8px;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 70px;
+            height: 70px;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+
+        .nav-link i {
+            font-size: 1.5rem; /* Larger icons */
+            text-align: center;
+        }
+
+        /* Hide text labels in slim sidebar */
+        .nav-link span {
+            display: none;
+        }
+
+        .user-menu {
+            margin-top: auto;
+            padding: 20px 0;
+            border-top: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .user-avatar-small {
+            width: 50px; /* Slightly larger for slim sidebar */
+            height: 50px;
+            background: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 1.2rem;
+        }
+
+        /* Hide user info text in slim sidebar */
+        .user-info {
+            display: none;
+        }
+
+        /* Header Styles */
+        .header {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            margin-left: 0px; /* Push header to the right of sidebar */
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 10px;
+            max-width: calc(1600px - 110px);
+            margin: 0 auto;
+            padding-left: 20px;
+            padding-right: 20px;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo i {
+            font-size: 2rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .search-container {
+            flex: 1;
+            max-width: 800px;
+            margin: 0 30px;
+            position: relative;
+        }
+
+        .search-input-wrapper {
+            display: flex;
+            background: var(--light);
+            border-radius: 50px;
+            overflow: hidden;
+            border: 2px solid var(--light-gray);
+            transition: var(--transition);
+        }
+
+        .search-input-wrapper:focus-within {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            background: transparent;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        .search-btn {
+            padding: 0 20px;
+            background: var(--primary);
+            color: white;
+            font-size: 1.1rem;
+            transition: var(--transition);
+        }
+
+        .search-btn:hover {
+            background: var(--secondary);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .notification-btn {
+            position: relative;
+            font-size: 1.3rem;
+            color: var(--gray);
+            padding: 8px;
+            border-radius: 50%;
+            transition: var(--transition);
+        }
+
+        .notification-btn:hover {
+            background: var(--light-gray);
+            color: var(--dark);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: var(--accent);
+            color: white;
+            font-size: 0.7rem;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .user-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 3px solid var(--light-gray);
+            transition: var(--transition);
+        }
+
+        .user-avatar:hover {
+            border-color: var(--primary);
+        }
+
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Main Content Layout */
+        .main-container {
+            display: flex;
+            gap: 30px;
+            padding: 30px 0;
+            min-height: calc(100vh - 80px);
+            width: calc(100% - 110px); 
+            margin-left: 20px; /* Push content to the right of sidebar */
+            }
+
+        /* Filter Sidebar */
+        .filter-sidebar {
+            width: 320px; /* Slightly wider for better readability */
+            flex-shrink: 0;
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 25px;
+            box-shadow: var(--shadow);
+            height: fit-content;
+            position: sticky;
+            top: 100px;
+        }
+
+        .filter-section {
+            margin-bottom: 25px;
+            padding-bottom: 25px;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .filter-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .filter-title {
+            font-size: 1rem;
+            color: var(--dark);
+            margin-bottom: 15px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .filter-title i {
+            color: var(--primary);
+        }
+
+        .radio-group, .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .radio-group label, .checkbox-group label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 0;
+            cursor: pointer;
+            color: var(--dark);
+            transition: var(--transition);
+            border-radius: 6px;
+            padding-left: 10px;
+        }
+
+        .radio-group label:hover, .checkbox-group label:hover {
+            background: rgba(67, 97, 238, 0.05);
+        }
+
+        input[type="radio"], input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary);
+        }
+
+        .skill-category {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .category-tag {
+            background: var(--light);
+            border: 1px solid var(--light-gray);
+            padding: 10px 8px; /* Adjusted padding for better fit */
+            border-radius: 20px;
+            font-size: 0.8rem; /* Slightly smaller font */
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: center;
+            word-break: break-word;
+        }
+
+        .category-tag:hover, .category-tag.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .location-select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid var(--light-gray);
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+        }
+
+        .slider-container {
+            margin: 15px 0;
+        }
+
+        .slider-value {
+            text-align: center;
+            font-size: 0.9rem;
+            color: var(--gray);
+            margin-top: 5px;
+        }
+
+        .filter-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(67, 97, 238, 0.3);
+        }
+
+        .clear-filters {
+            color: var(--gray);
+            text-align: center;
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+
+        .clear-filters:hover {
+            color: var(--accent);
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            min-width: 0; /* Allows content to shrink properly */
+        }
+
+        .page-title {
+            font-size: 2rem;
+            color: var(--dark);
+            margin-bottom: 25px;
+            font-weight: 700;
+        }
+
+        /* Quick Tags */
+        .quick-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .quick-tag {
+            background: white;
+            border: 1px solid var(--light-gray);
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .quick-tag:hover, .quick-tag.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        /* Search & Controls */
+        .search-controls {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: var(--shadow);
+        }
+
+        .results-summary {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .results-info {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .results-count {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .availability-count {
+            font-size: 0.9rem;
+            color: var(--success);
+            font-weight: 500;
+        }
+
+        .view-toggle {
+            display: flex;
+            background: var(--light);
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid var(--light-gray);
+        }
+
+        .view-btn {
+            padding: 8px 16px;
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+
+        .view-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Results Grid - Adjusted for sidebar */
+        .results-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .results-container.list-view {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        /* Adjust grid for different screen sizes */
+        @media (min-width: 1600px) {
+            .results-container {
+                grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            }
+        }
+
+        @media (max-width: 1400px) {
+            .results-container {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            }
+        }
+
+        /* Mentor Card */
+        .mentor-card {
+            background: white;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .mentor-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-header {
+            padding: 20px 20px 0;
+            position: relative;
+        }
+
+        .profile-photo {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 4px solid white;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 15px;
+        }
+
+        .profile-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .save-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gray);
+            transition: var(--transition);
+        }
+
+        .save-btn:hover, .save-btn.saved {
+            color: var(--accent);
+            transform: scale(1.1);
+        }
+
+        .compare-checkbox {
+            position: absolute;
+            top: 65px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.8rem;
+            color: var(--gray);
+        }
+
+        .card-body {
+            padding: 0 20px 20px;
+        }
+
+        .mentor-name {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .rating {
+            color: var(--warning);
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .mentor-title {
+            color: var(--gray);
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+
+        .skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .skill-tag {
+            background: rgba(67, 97, 238, 0.1);
+            color: var(--primary);
+            padding: 4px 10px;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .badge {
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .five-star {
+            background: rgba(248, 150, 30, 0.1);
+            color: var(--warning);
+        }
+
+        .master {
+            background: rgba(67, 97, 238, 0.1);
+            color: var(--primary);
+        }
+
+        .verified {
+            background: rgba(76, 201, 240, 0.1);
+            color: var(--success);
+        }
+
+        .stats {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .availability-info, .mode-info {
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+            color: var(--dark);
+        }
+
+        .availability-info i, .mode-info i {
+            color: var(--primary);
+            margin-right: 8px;
+        }
+
+        .card-footer {
+            padding: 15px 20px;
+            background: var(--light);
+            border-top: 1px solid var(--light-gray);
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-outline {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            border-radius: 8px;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .btn-outline:hover {
+            background: rgba(67, 97, 238, 0.1);
+        }
+
+        /* List View */
+        .mentor-card.list-view {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+        }
+
+        .mentor-card.list-view .card-header {
+            padding: 0;
+            margin-right: 20px;
+        }
+
+        .mentor-card.list-view .profile-photo {
+            width: 60px;
+            height: 60px;
+            margin-bottom: 0;
+        }
+
+        .mentor-card.list-view .card-body {
+            flex: 1;
+            padding: 0;
+        }
+
+        .mentor-card.list-view .mentor-name {
+            font-size: 1.1rem;
+        }
+
+        .mentor-card.list-view .skills {
+            margin-bottom: 10px;
+        }
+
+        .mentor-card.list-view .card-footer {
+            background: transparent;
+            border: none;
+            padding: 0;
+            width: auto;
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-top: 40px;
+        }
+
+        .pagination-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            color: var(--dark);
+            font-weight: 600;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .pagination-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .pagination-btn:hover:not(.active) {
+            background: var(--light-gray);
+        }
+
+        .load-more {
+            background: white;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-weight: 600;
+            color: var(--primary);
+            box-shadow: var(--shadow);
+            margin-left: 20px;
+            transition: var(--transition);
+        }
+
+        .load-more:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            grid-column: 1 / -1;
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            color: var(--light-gray);
+            margin-bottom: 20px;
+        }
+
+        .empty-state h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: var(--dark);
+        }
+
+        .empty-state p {
+            color: var(--gray);
+            margin-bottom: 25px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Compare Bar */
+        .compare-bar {
+            position: fixed;
+            bottom: 0;
+            left: 110px; /* Account for slim sidebar */
+            right: 0;
+            background: white;
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+        }
+
+        .compare-bar.active {
+            transform: translateY(0);
+        }
+
+        .compare-count {
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .compare-count span {
+            color: var(--primary);
+        }
+
+        .compare-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn-secondary {
+            background: var(--light);
+            color: var(--dark);
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .btn-secondary:hover {
+            background: var(--light-gray);
+        }
+
+        /* Mobile Filter Toggle */
+        .mobile-filter-toggle {
+            display: none;
+            background: var(--primary);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            width: 100%;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1400px) {
+            .main-container {
+                gap: 20px;
+            }
+            
+            .filter-sidebar {
+                width: 280px;
+            }
+        }
+
+        @media (max-width: 1200px) {
+            body {
+                margin-left: 0;
+            }
+            
+            .header {
+                width: 100%;
+                margin-left: 0;
+            }
+            
+            .main-container {
+                width: 100%;
+                margin-left: 0;
+            }
+            
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .compare-bar {
+                left: 0;
+            }
+            
+            .main-container {
+                flex-direction: column;
+            }
+            
+            .filter-sidebar {
+                width: 100%;
+                position: static;
+            }
+            
+            .results-container {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            }
+            
+            .mobile-filter-toggle {
+                display: flex;
+            }
+            
+            .filter-sidebar {
+                display: none;
+            }
+            
+            .filter-sidebar.active {
+                display: block;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-wrap: wrap;
+            }
+            
+            .search-container {
+                order: 3;
+                margin: 15px 0 0;
+                max-width: 100%;
+            }
+            
+            .results-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .skills {
+                flex-wrap: wrap;
+            }
+            
+            .mentor-card.list-view {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .mentor-card.list-view .card-footer {
+                width: 100%;
+                margin-top: 15px;
+            }
+            
+            .skill-category {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* New to Platform Section */
+        .new-badge {
+            background: linear-gradient(135deg, var(--success), #2ec4b6);
+            color: white;
+            padding: 3px 10px;
+            border-radius: 30px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-left: 10px;
+        }
+
+        /* Sidebar Toggle for Mobile */
+        .sidebar-toggle {
+            display: none;
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1002;
+            background: var(--primary);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        @media (max-width: 1200px) {
+            .sidebar-toggle {
+                display: flex;
+            }
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+
+        .overlay.active {
+            display: block;
+        }
+
+        /* Tooltip for sidebar icons */
+        .nav-link {
+            position: relative;
+        }
+
+        .nav-link::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            left: 100%;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--dark);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+            pointer-events: none;
+            z-index: 1002;
+            margin-left: 10px;
+        }
+
+        .nav-link:hover::after {
+            opacity: 1;
+            visibility: visible;
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+        <a href="dashboard.html" class="sidebar-logo">
+            <i class="fas fa-exchange-alt"></i>
+        </a>
+        
+        <div class="nav-links">
+            <a href="dashboard.html" class="nav-link" data-tooltip="Dashboard">
+                <i class="fas fa-home"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="userProfile.html" class="nav-link" data-tooltip="Profile">
+                <i class="fas fa-user"></i>
+                <span>Profile</span>
+            </a>
+            <a href="chat.html" class="nav-link" data-tooltip="Messages">
+                <i class="fas fa-envelope"></i>
+                <span>Messages</span>
+            </a>
+            <a href="ai-matching.html" class="nav-link" data-tooltip="AI Matching">
+                <i class="fas fa-robot"></i>
+                <span>AI Matching</span>
+            </a>
+            <a href="browse-skills.html" class="nav-link active" data-tooltip="Browse Skills">
+                <i class="fas fa-search"></i>
+                <span>Browse Skills</span>
+            </a>
+        </div>
+        
+        <div class="user-menu">
+            <div class="user-avatar-small" data-tooltip="Sarah">S</div>
+            <div class="user-info">
+                <h4>Sarah</h4>
+                <p>Learner & Mentor</p>
+            </div>
+        </div>
+    </aside>
+    
+    <!-- Overlay for mobile sidebar -->
+    <div class="overlay" id="sidebarOverlay"></div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <span>SkillSwap UAE</span>
+            </div>
+            
+            <div class="search-container">
+                <div class="search-input-wrapper">
+                    <input type="text" class="search-input" id="mainSearch" placeholder="Search for skills, mentors, or keywords...">
+                    <button class="search-btn" id="searchButton">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Mobile Filter Toggle -->
+        <button class="mobile-filter-toggle" id="mobileFilterToggle">
+            <i class="fas fa-filter"></i>
+            Show Filters
+        </button>
+        
+        <div class="main-container">
+            <!-- Filter Sidebar -->
+            <aside class="filter-sidebar" id="filterSidebar">
+                <div class="filter-section">
+                    <h3 class="filter-title"><i class="fas fa-compass"></i> Browse By</h3>
+                    <div class="radio-group" id="browseType">
+                        <label>
+                            <input type="radio" name="browseType" value="skills" id="skillsRadio">
+                            🎓 Skills
+                        </label>
+                        <label>
+                            <input type="radio" name="browseType" value="mentors" id="mentorsRadio" checked>
+                            👨‍🏫 Mentors
+                        </label>
+                        <label>
+                            <input type="radio" name="browseType" value="learners" id="learnersRadio">
+                            👨‍🎓 Learners
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="filter-section">
+                    <h3 class="filter-title"><i class="fas fa-tags"></i> Skill Categories</h3>
+                    <div class="skill-category" id="skillCategories">
+                        <div class="category-tag" data-category="technology">Technology & Programming</div>
+                        <div class="category-tag" data-category="business">Business & Entrepreneurship</div>
+                        <div class="category-tag" data-category="languages">Languages</div>
+                        <div class="category-tag" data-category="arts">Arts & Creativity</div>
+                        <div class="category-tag" data-category="health">Health & Fitness</div>
+                        <div class="category-tag" data-category="cooking">Cooking & Culinary</div>
+                        <div class="category-tag" data-category="music">Music & Performance</div>
+                        <div class="category-tag" data-category="engineering">Engineering</div>
+                    </div>
+                </div>
+                
+                <div class="filter-section">
+                    <h3 class="filter-title"><i class="fas fa-calendar-alt"></i> Availability</h3>
+                    <div class="checkbox-group" id="availability">
+                        <label>
+                            <input type="checkbox" name="availability" value="week">
+                            Available This Week
+                        </label>
+                        <label>
+                            <input type="checkbox" name="availability" value="weekends">
+                            Available Weekends
+                        </label>
+                        <label>
+                            <input type="checkbox" name="availability" value="evenings">
+                            Available Evenings
+                        </label>
+                        <label>
+                            <input type="checkbox" name="availability" value="flexible">
+                            Flexible Schedule
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="filter-section">
+                    <h3 class="filter-title"><i class="fas fa-laptop-house"></i> Session Mode</h3>
+                    <div class="checkbox-group" id="sessionMode">
+                        <label>
+                            <input type="checkbox" name="mode" value="online">
+                            Online Only
+                        </label>
+                        <label>
+                            <input type="checkbox" name="mode" value="in-person">
+                            In-Person Only
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="filter-section">
+                    <h3 class="filter-title"><i class="fas fa-map-marker-alt"></i> Location</h3>
+                    <select class="location-select" id="locationSelect">
+                        <option value="">All Locations</option>
+                        <option value="dubai">Dubai</option>
+                        <option value="abudhabi">Abu Dhabi</option>
+                        <option value="sharjah">Sharjah</option>
+                        <option value="ajman">Ajman</option>
+                        <option value="rasalkhaimah">Ras Al Khaimah</option>
+                        <option value="fujairah">Fujairah</option>
+                        <option value="ummalquwain">Umm Al Quwain</option>
+                    </select>
+                </div>
+                
+                <div class="filter-section">
+                    <h3 class="filter-title"><i class="fas fa-star"></i> Minimum Rating</h3>
+                    <div class="checkbox-group" id="rating">
+                        <label>
+                            <input type="radio" name="rating" value="4.5">
+                            4.5+ Stars
+                        </label>
+                        <label>
+                            <input type="radio" name="rating" value="4.0">
+                            4.0+ Stars
+                        </label>
+                        <label>
+                            <input type="radio" name="rating" value="3.5">
+                            3.5+ Stars
+                        </label>
+                        <label>
+                            <input type="radio" name="rating" value="0" checked>
+                            Any Rating
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="filter-section">
+                    <h3 class="filter-title"><i class="fas fa-chart-line"></i> Experience Level</h3>
+                    <div class="checkbox-group" id="experienceLevel">
+                        <label>
+                            <input type="checkbox" name="experience" value="beginner">
+                            Beginner
+                        </label>
+                        <label>
+                            <input type="checkbox" name="experience" value="intermediate">
+                            Intermediate
+                        </label>
+                        <label>
+                            <input type="checkbox" name="experience" value="advanced">
+                            Advanced
+                        </label>
+                        <label>
+                            <input type="checkbox" name="experience" value="expert">
+                            Expert
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="filter-actions">
+                    <button class="btn-primary" id="applyFilters">
+                        <i class="fas fa-check"></i>
+                        Apply Filters
+                    </button>
+                    <a href="#" class="clear-filters" id="clearFilters">Clear All Filters</a>
+                </div>
+            </aside>
+            
+            <!-- Main Content -->
+            <main class="main-content">
+                <h1 class="page-title">BROWSE SKILLS & MENTORS</h1>
+                
+                <!-- Quick Tags -->
+                <div class="quick-tags" id="quickTags">
+                    <div class="quick-tag" data-skill="python">
+                        <i class="fab fa-python"></i>
+                        Python
+                    </div>
+                    <div class="quick-tag" data-skill="arabic">
+                        <i class="fas fa-language"></i>
+                        Arabic
+                    </div>
+                    <div class="quick-tag" data-skill="photography">
+                        <i class="fas fa-camera"></i>
+                        Photography
+                    </div>
+                    <div class="quick-tag" data-skill="excel">
+                        <i class="fas fa-file-excel"></i>
+                        Excel
+                    </div>
+                    <div class="quick-tag" data-skill="cooking">
+                        <i class="fas fa-utensils"></i>
+                        Cooking
+                    </div>
+                    <div class="quick-tag" data-skill="marketing">
+                        <i class="fas fa-chart-line"></i>
+                        Digital Marketing
+                    </div>
+                    <div class="quick-tag" data-skill="guitar">
+                        <i class="fas fa-guitar"></i>
+                        Guitar
+                    </div>
+                    <div class="quick-tag" data-skill="webdev">
+                        <i class="fas fa-code"></i>
+                        Web Development
+                    </div>
+                </div>
+                
+                <!-- Search & Controls -->
+                <div class="search-controls">
+                    <div class="results-summary">
+                        <div class="results-info">
+                            <div class="results-count" id="resultsCount">Showing 6 mentors</div>
+                            <div class="availability-count" id="availabilityCount">4 available this week</div>
+                        </div>
+                        
+                        <div class="view-toggle">
+                            <button class="view-btn active" id="gridViewBtn">
+                                <i class="fas fa-th-large"></i>
+                            </button>
+                            <button class="view-btn" id="listViewBtn">
+                                <i class="fas fa-list"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Results Grid -->
+                <div class="results-container grid-view" id="resultsContainer">
+                    <!-- Mentor cards will be dynamically filtered -->
+                </div>
+                
+                <!-- Pagination -->
+                <div class="pagination">
+                    <button class="pagination-btn prev">«</button>
+                    <button class="pagination-btn active">1</button>
+                    <button class="pagination-btn">2</button>
+                    <button class="pagination-btn">3</button>
+                    <button class="pagination-btn">4</button>
+                    <button class="pagination-btn">5</button>
+                    <button class="pagination-btn next">»</button>
+                    <button class="load-more">Load More</button>
+                </div>
+                
+                <!-- Empty State (Hidden by default) -->
+                <div class="empty-state" id="emptyState" style="display: none;">
+                    <i class="fas fa-search"></i>
+                    <h3>No mentors found matching your criteria</h3>
+                    <p>Try adjusting your filters or use AI Matching for personalized recommendations based on your goals and preferences.</p>
+                    <button class="btn-primary try-ai-matching">
+                        <i class="fas fa-robot"></i>
+                        Try AI Matching
+                    </button>
+                </div>
+            </main>
+        </div>
+    </div>
+    
+    <!-- Compare Bar -->
+    <div class="compare-bar" id="compareBar">
+        <div class="compare-count">
+            <span id="compareCount">0</span> mentors selected for comparison (Max: 3)
+        </div>
+        <div class="compare-actions">
+            <button class="btn-secondary" id="clearCompare">Clear All</button>
+            <button class="btn-primary" id="compareSelected">Compare Selected</button>
+        </div>
+    </div>
+    
+    <!-- JavaScript remains the same as before -->
+    <script>
+        // Sample Mentor Data
+        const mentors = [
+            {
+                id: 1,
+                name: "Sarah Ahmed",
+                title: "Marketing Expert | Dubai",
+                rating: 4.8,
+                skills: ["Social Media", "Content Writing", "SEO"],
+                badges: ["five-star", "master"],
+                sessions: 42,
+                reviews: 28,
+                availability: ["week", "evenings"],
+                mode: ["online", "in-person"],
+                location: "dubai",
+                experience: ["intermediate", "advanced"],
+                category: "business",
+                image: "https://randomuser.me/api/portraits/women/32.jpg"
+            },
+            {
+                id: 2,
+                name: "Omar Khaled",
+                title: "Python Developer | Abu Dhabi",
+                rating: 4.9,
+                skills: ["Python", "Django", "Data Science"],
+                badges: ["five-star", "master", "verified"],
+                sessions: 87,
+                reviews: 63,
+                availability: ["flexible"],
+                mode: ["online"],
+                location: "abudhabi",
+                experience: ["expert"],
+                category: "technology",
+                image: "https://randomuser.me/api/portraits/men/75.jpg"
+            },
+            {
+                id: 3,
+                name: "Layla Hassan",
+                title: "Arabic Language Tutor | Sharjah",
+                rating: 5.0,
+                skills: ["Arabic", "Quranic Arabic", "Business Arabic"],
+                badges: ["five-star", "verified"],
+                sessions: 12,
+                reviews: 10,
+                availability: ["weekends", "evenings"],
+                mode: ["online", "in-person"],
+                location: "sharjah",
+                experience: ["intermediate"],
+                category: "languages",
+                image: "https://randomuser.me/api/portraits/women/65.jpg",
+                isNew: true
+            },
+            {
+                id: 4,
+                name: "James Wilson",
+                title: "Financial Analyst | Dubai",
+                rating: 4.5,
+                skills: ["Excel", "Financial Modeling", "Investing"],
+                badges: ["master"],
+                sessions: 56,
+                reviews: 38,
+                availability: ["week", "evenings"],
+                mode: ["online"],
+                location: "dubai",
+                experience: ["advanced", "expert"],
+                category: "business",
+                image: "https://randomuser.me/api/portraits/men/81.jpg"
+            },
+            {
+                id: 5,
+                name: "Fatima Al-Mansoori",
+                title: "Photography Coach | Abu Dhabi",
+                rating: 4.7,
+                skills: ["Photography", "Photo Editing", "Portrait Photography"],
+                badges: ["five-star", "master", "verified"],
+                sessions: 73,
+                reviews: 51,
+                availability: ["weekends"],
+                mode: ["in-person"],
+                location: "abudhabi",
+                experience: ["expert"],
+                category: "arts",
+                image: "https://randomuser.me/api/portraits/women/47.jpg"
+            },
+            {
+                id: 6,
+                name: "Carlos Rodriguez",
+                title: "Guitar Instructor | Dubai",
+                rating: 4.6,
+                skills: ["Guitar", "Music Theory", "Songwriting"],
+                badges: ["master"],
+                sessions: 41,
+                reviews: 29,
+                availability: ["flexible"],
+                mode: ["online", "in-person"],
+                location: "dubai",
+                experience: ["intermediate", "advanced"],
+                category: "music",
+                image: "https://randomuser.me/api/portraits/men/36.jpg"
+            }
+        ];
+
+        // DOM Elements
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+        const sidebar = document.querySelector('.sidebar');
+        const mobileFilterToggle = document.getElementById('mobileFilterToggle');
+        const filterSidebar = document.getElementById('filterSidebar');
+        const resultsContainer = document.getElementById('resultsContainer');
+        const resultsCount = document.getElementById('resultsCount');
+        const availabilityCount = document.getElementById('availabilityCount');
+        const emptyState = document.getElementById('emptyState');
+        
+        // Filter elements
+        const skillCategories = document.querySelectorAll('.category-tag');
+        const quickTags = document.querySelectorAll('.quick-tag');
+        const applyFiltersBtn = document.getElementById('applyFilters');
+        const clearFiltersBtn = document.getElementById('clearFilters');
+        const mainSearch = document.getElementById('mainSearch');
+        const searchButton = document.getElementById('searchButton');
+        
+        // Current filters
+        let currentFilters = {
+            browseType: 'mentors',
+            categories: [],
+            availability: [],
+            mode: [],
+            location: '',
+            minRating: 0,
+            experience: [],
+            searchQuery: '',
+            quickTag: ''
+        };
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            renderMentors(mentors);
+            setupEventListeners();
+        });
+
+        function setupEventListeners() {
+            // Sidebar toggle for mobile
+            sidebarToggle.addEventListener('click', () => {
+                sidebar.classList.add('active');
+                sidebarOverlay.classList.add('active');
+            });
+
+            sidebarOverlay.addEventListener('click', () => {
+                sidebar.classList.remove('active');
+                sidebarOverlay.classList.remove('active');
+            });
+
+            // Mobile filter toggle
+            mobileFilterToggle.addEventListener('click', () => {
+                filterSidebar.classList.toggle('active');
+                mobileFilterToggle.innerHTML = filterSidebar.classList.contains('active') 
+                    ? '<i class="fas fa-times"></i> Hide Filters' 
+                    : '<i class="fas fa-filter"></i> Show Filters';
+            });
+
+            // Skill categories
+            skillCategories.forEach(tag => {
+                tag.addEventListener('click', function() {
+                    this.classList.toggle('active');
+                    updateCategoryFilters();
+                });
+            });
+
+            // Quick tags
+            quickTags.forEach(tag => {
+                tag.addEventListener('click', function() {
+                    const skill = this.dataset.skill;
+                    
+                    // Remove active class from all quick tags
+                    quickTags.forEach(t => t.classList.remove('active'));
+                    
+                    // Add active class to clicked tag
+                    this.classList.add('active');
+                    
+                    // Update filter and apply
+                    currentFilters.quickTag = skill;
+                    applyFilters();
+                });
+            });
+
+            // Apply filters button
+            applyFiltersBtn.addEventListener('click', applyFilters);
+
+            // Clear filters button
+            clearFiltersBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                clearFilters();
+            });
+
+            // Search functionality
+            searchButton.addEventListener('click', () => {
+                currentFilters.searchQuery = mainSearch.value.toLowerCase();
+                applyFilters();
+            });
+
+            mainSearch.addEventListener('keyup', (e) => {
+                if (e.key === 'Enter') {
+                    currentFilters.searchQuery = mainSearch.value.toLowerCase();
+                    applyFilters();
+                }
+            });
+
+            // View toggle
+            document.getElementById('gridViewBtn').addEventListener('click', () => {
+                document.getElementById('gridViewBtn').classList.add('active');
+                document.getElementById('listViewBtn').classList.remove('active');
+                resultsContainer.classList.remove('list-view');
+                resultsContainer.classList.add('grid-view');
+            });
+
+            document.getElementById('listViewBtn').addEventListener('click', () => {
+                document.getElementById('listViewBtn').classList.add('active');
+                document.getElementById('gridViewBtn').classList.remove('active');
+                resultsContainer.classList.remove('grid-view');
+                resultsContainer.classList.add('list-view');
+            });
+        }
+
+        function updateCategoryFilters() {
+            currentFilters.categories = [];
+            document.querySelectorAll('.category-tag.active').forEach(tag => {
+                currentFilters.categories.push(tag.dataset.category);
+            });
+        }
+
+        function applyFilters() {
+            // Get all current filter values
+            updateCategoryFilters();
+            
+            // Get browse type
+            const browseTypeRadio = document.querySelector('input[name="browseType"]:checked');
+            currentFilters.browseType = browseTypeRadio ? browseTypeRadio.value : 'mentors';
+            
+            // Get availability
+            currentFilters.availability = [];
+            document.querySelectorAll('#availability input:checked').forEach(cb => {
+                currentFilters.availability.push(cb.value);
+            });
+            
+            // Get session mode
+            currentFilters.mode = [];
+            document.querySelectorAll('#sessionMode input:checked').forEach(cb => {
+                currentFilters.mode.push(cb.value);
+            });
+            
+            // Get location
+            currentFilters.location = document.getElementById('locationSelect').value;
+            
+            // Get min rating
+            const ratingRadio = document.querySelector('input[name="rating"]:checked');
+            currentFilters.minRating = ratingRadio ? parseFloat(ratingRadio.value) : 0;
+            
+            // Get experience level
+            currentFilters.experience = [];
+            document.querySelectorAll('#experienceLevel input:checked').forEach(cb => {
+                currentFilters.experience.push(cb.value);
+            });
+            
+            // Filter mentors
+            const filteredMentors = mentors.filter(mentor => {
+                // Browse type filter (for now only mentors)
+                if (currentFilters.browseType !== 'mentors') return false;
+                
+                // Category filter
+                if (currentFilters.categories.length > 0 && !currentFilters.categories.includes(mentor.category)) {
+                    return false;
+                }
+                
+                // Availability filter
+                if (currentFilters.availability.length > 0) {
+                    const hasMatchingAvailability = currentFilters.availability.some(avail => 
+                        mentor.availability.includes(avail)
+                    );
+                    if (!hasMatchingAvailability) return false;
+                }
+                
+                // Session mode filter
+                if (currentFilters.mode.length > 0) {
+                    const hasMatchingMode = currentFilters.mode.some(mode => 
+                        mentor.mode.includes(mode)
+                    );
+                    if (!hasMatchingMode) return false;
+                }
+                
+                // Location filter
+                if (currentFilters.location && mentor.location !== currentFilters.location) {
+                    return false;
+                }
+                
+                // Rating filter
+                if (mentor.rating < currentFilters.minRating) {
+                    return false;
+                }
+                
+                // Experience filter
+                if (currentFilters.experience.length > 0) {
+                    const hasMatchingExperience = currentFilters.experience.some(exp => 
+                        mentor.experience.includes(exp)
+                    );
+                    if (!hasMatchingExperience) return false;
+                }
+                
+                // Search query filter
+                if (currentFilters.searchQuery) {
+                    const searchLower = currentFilters.searchQuery.toLowerCase();
+                    const matchesName = mentor.name.toLowerCase().includes(searchLower);
+                    const matchesTitle = mentor.title.toLowerCase().includes(searchLower);
+                    const matchesSkills = mentor.skills.some(skill => 
+                        skill.toLowerCase().includes(searchLower)
+                    );
+                    
+                    if (!matchesName && !matchesTitle && !matchesSkills) {
+                        return false;
+                    }
+                }
+                
+                // Quick tag filter
+                if (currentFilters.quickTag) {
+                    const matchesQuickTag = mentor.skills.some(skill => 
+                        skill.toLowerCase().includes(currentFilters.quickTag)
+                    );
+                    if (!matchesQuickTag) return false;
+                }
+                
+                return true;
+            });
+            
+            // Render filtered results
+            renderMentors(filteredMentors);
+            
+            // Close mobile filter sidebar
+            if (window.innerWidth <= 1200) {
+                filterSidebar.classList.remove('active');
+                mobileFilterToggle.innerHTML = '<i class="fas fa-filter"></i> Show Filters';
+            }
+        }
+
+        function clearFilters() {
+            // Clear all checkboxes
+            document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+            
+            // Reset radio buttons
+            document.getElementById('mentorsRadio').checked = true;
+            document.querySelector('input[name="rating"][value="0"]').checked = true;
+            
+            // Clear category tags
+            skillCategories.forEach(tag => tag.classList.remove('active'));
+            
+            // Clear quick tags
+            quickTags.forEach(tag => tag.classList.remove('active'));
+            
+            // Reset select
+            document.getElementById('locationSelect').value = '';
+            
+            // Clear search
+            mainSearch.value = '';
+            
+            // Reset filter state
+            currentFilters = {
+                browseType: 'mentors',
+                categories: [],
+                availability: [],
+                mode: [],
+                location: '',
+                minRating: 0,
+                experience: [],
+                searchQuery: '',
+                quickTag: ''
+            };
+            
+            // Render all mentors
+            renderMentors(mentors);
+            
+            // Show notification
+            showNotification('All filters cleared');
+        }
+
+        function renderMentors(mentorsToRender) {
+            resultsContainer.innerHTML = '';
+            
+            if (mentorsToRender.length === 0) {
+                emptyState.style.display = 'block';
+                resultsCount.textContent = 'No mentors found';
+                availabilityCount.textContent = '';
+                return;
+            }
+            
+            emptyState.style.display = 'none';
+            resultsCount.textContent = `Showing ${mentorsToRender.length} mentors`;
+            
+            // Calculate available this week
+            const availableThisWeek = mentorsToRender.filter(mentor => 
+                mentor.availability.includes('week') || mentor.availability.includes('flexible')
+            ).length;
+            availabilityCount.textContent = `${availableThisWeek} available this week`;
+            
+            mentorsToRender.forEach(mentor => {
+                const mentorCard = createMentorCard(mentor);
+                resultsContainer.appendChild(mentorCard);
+            });
+        }
+
+        function createMentorCard(mentor) {
+            const card = document.createElement('div');
+            card.className = 'mentor-card';
+            card.dataset.id = mentor.id;
+            
+            // Format availability
+            const availabilityText = getAvailabilityText(mentor.availability);
+            const modeText = getModeText(mentor.mode);
+            
+            // Format badges
+            const badgesHTML = mentor.badges.map(badge => {
+                const badgeNames = {
+                    'five-star': '🏆 Five-Star Mentor',
+                    'master': 'Master',
+                    'verified': 'Verified'
+                };
+                const badgeClasses = {
+                    'five-star': 'badge five-star',
+                    'master': 'badge master',
+                    'verified': 'badge verified'
+                };
+                return `<span class="${badgeClasses[badge]}">${badgeNames[badge]}</span>`;
+            }).join('');
+            
+            // Format skills
+            const skillsHTML = mentor.skills.map(skill => 
+                `<span class="skill-tag">${skill}</span>`
+            ).join('');
+            
+            // New badge
+            const newBadge = mentor.isNew ? '<span class="new-badge">NEW</span>' : '';
+            
+            card.innerHTML = `
+                <div class="card-header">
+                    <div class="profile-photo">
+                        <img src="${mentor.image}" alt="${mentor.name}">
+                    </div>
+                    <button class="save-btn" aria-label="Save to favorites">
+                        <i class="far fa-heart"></i>
+                    </button>
+                    <div class="compare-checkbox">
+                        <input type="checkbox" id="compare${mentor.id}">
+                        <label for="compare${mentor.id}">Compare</label>
+                    </div>
+                    ${newBadge}
+                </div>
+                
+                <div class="card-body">
+                    <h3 class="mentor-name">
+                        ${mentor.name}
+                        <span class="rating">⭐ ${mentor.rating}</span>
+                    </h3>
+                    <p class="mentor-title">${mentor.title}</p>
+                    
+                    <div class="skills">
+                        ${skillsHTML}
+                    </div>
+                    
+                    <div class="badges">
+                        ${badgesHTML}
+                    </div>
+                    
+                    <div class="stats">
+                        <span class="sessions">💬 ${mentor.sessions} sessions</span>
+                        <span class="reviews">${mentor.reviews} reviews</span>
+                    </div>
+                    
+                    <div class="availability-info">
+                        <i class="fas fa-calendar-check"></i>
+                        <strong>Available:</strong> ${availabilityText}
+                    </div>
+                    
+                    <div class="mode-info">
+                        <i class="fas fa-laptop"></i>
+                        <strong>Mode:</strong> ${modeText}
+                    </div>
+                </div>
+                
+                <div class="card-footer">
+                    <button class="btn-outline view-profile">View Profile</button>
+                    <button class="btn-primary request-session">Request Session</button>
+                </div>
+            `;
+            
+            // Add event listeners to card buttons
+            const saveBtn = card.querySelector('.save-btn');
+            saveBtn.addEventListener('click', function() {
+                const icon = this.querySelector('i');
+                if (icon.classList.contains('far')) {
+                    icon.classList.remove('far');
+                    icon.classList.add('fas');
+                    this.classList.add('saved');
+                    showNotification('Mentor saved to your favorites!');
+                } else {
+                    icon.classList.remove('fas');
+                    icon.classList.add('far');
+                    this.classList.remove('saved');
+                    showNotification('Mentor removed from favorites.');
+                }
+            });
+            
+            // Compare checkbox
+            const compareCheckbox = card.querySelector('input[type="checkbox"]');
+            compareCheckbox.addEventListener('change', updateCompareBar);
+            
+            // Action buttons
+            card.querySelector('.view-profile').addEventListener('click', () => {
+                showNotification(`Opening profile of ${mentor.name}...`);
+            });
+            
+            card.querySelector('.request-session').addEventListener('click', () => {
+                showNotification(`Requesting session with ${mentor.name}...`);
+            });
+            
+            return card;
+        }
+
+        function getAvailabilityText(availability) {
+            const texts = {
+                'week': 'This Week',
+                'weekends': 'Weekends',
+                'evenings': 'Evenings',
+                'flexible': 'Flexible Schedule'
+            };
+            
+            if (availability.includes('flexible')) {
+                return 'Flexible Schedule';
+            }
+            
+            return availability.map(avail => texts[avail]).join(', ');
+        }
+
+        function getModeText(mode) {
+            if (mode.includes('online') && mode.includes('in-person')) {
+                return 'Online & In-person';
+            } else if (mode.includes('online')) {
+                return 'Online Only';
+            } else {
+                return 'In-Person Only';
+            }
+        }
+
+        // Compare functionality
+        let compareList = [];
+        
+        function updateCompareBar() {
+            compareList = [];
+            document.querySelectorAll('.compare-checkbox input:checked').forEach(cb => {
+                const mentorId = cb.closest('.mentor-card').dataset.id;
+                compareList.push(mentorId);
+            });
+            
+            const compareCount = document.getElementById('compareCount');
+            const compareBar = document.getElementById('compareBar');
+            
+            compareCount.textContent = compareList.length;
+            
+            if (compareList.length > 0) {
+                compareBar.classList.add('active');
+            } else {
+                compareBar.classList.remove('active');
+            }
+            
+            // Limit to 3
+            if (compareList.length > 3) {
+                showNotification('You can only compare up to 3 mentors');
+                const lastCheckbox = document.querySelector('.compare-checkbox input:checked:last-of-type');
+                if (lastCheckbox) lastCheckbox.checked = false;
+                updateCompareBar();
+            }
+        }
+        
+        document.getElementById('clearCompare').addEventListener('click', () => {
+            document.querySelectorAll('.compare-checkbox input').forEach(cb => cb.checked = false);
+            updateCompareBar();
+        });
+        
+        document.getElementById('compareSelected').addEventListener('click', () => {
+            if (compareList.length > 0) {
+                showNotification(`Opening comparison view for ${compareList.length} mentors...`);
+                // In a real app, this would open a comparison modal or page
+            }
+        });
+
+        // Notification function
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: var(--primary);
+                color: white;
+                padding: 15px 25px;
+                border-radius: 8px;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+                z-index: 2000;
+                animation: slideIn 0.3s ease;
+                font-weight: 500;
+            `;
+            notification.textContent = message;
+            
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes slideIn {
+                    from { transform: translateX(100%); opacity: 0; }
+                    to { transform: translateX(0); opacity: 1; }
+                }
+                @keyframes slideOut {
+                    from { transform: translateX(0); opacity: 1; }
+                    to { transform: translateX(100%); opacity: 0; }
+                }
+            `;
+            document.head.appendChild(style);
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                    document.head.removeChild(style);
+                }, 300);
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

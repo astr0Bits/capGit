@@ -1,0 +1,1236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkillExchange | Sponsor Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        :root {
+            --primary: #2a5bd7;
+            --primary-light: #e8edff;
+            --secondary: #00c9a7;
+            --dark: #333344;
+            --light: #f8f9fc;
+            --gray: #8a8fa3;
+            --border: #e2e7f0;
+            --danger: #ff4757;
+            --warning: #ffa502;
+            --success: #2ed573;
+        }
+
+        body {
+            background-color: #f5f7fb;
+            color: var(--dark);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 260px;
+            background-color: white;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            padding: 25px 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-shrink: 0;
+            text-decoration: none;
+        }
+
+        .logo:hover {
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            color: var(--primary);
+            font-size: 28px;
+        }
+
+        .logo-text {
+            font-size: 22px;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .nav-menu {
+            flex: 1;
+            padding: 20px 0;
+            overflow-y: auto;
+        }
+
+        .nav-item {
+            padding: 15px 25px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-left: 4px solid transparent;
+            text-decoration: none;
+            color: var(--gray);
+
+        }
+
+        .nav-item:hover {
+            background-color: var(--primary-light);
+            text-decoration: none;
+            color: var(--primary);
+        }
+
+        .nav-item.active {
+            background-color: var(--primary-light);
+            border-left-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .nav-item i {
+            width: 20px;
+            text-align: center;
+            font-size: 18px;
+        }
+
+        .nav-text {
+            font-weight: 500;
+            font-size: 15px;
+        }
+
+        .user-info {
+            padding: 20px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-shrink: 0;
+        }
+
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 20px;
+        }
+
+        .user-details h4 {
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+
+        .user-details p {
+            font-size: 14px;
+            color: var(--gray);
+        }
+
+        /* Main Content Area */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            margin-left: 260px;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Updated Header with Quick Actions */
+        .header-container {
+            background: white;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            flex-shrink: 0;
+        }
+
+        .main-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 30px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .main-header h1 {
+            font-size: 28px;
+            color: var(--dark);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        /* Simplified Quick Actions Header Bar */
+        .quick-actions-bar {
+            display: flex;
+            align-items: center;
+            padding: 15px 30px;
+            background: white;
+            border-bottom: 1px solid var(--border);
+            flex-shrink: 0;
+        }
+
+        .actions-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-right: 25px;
+            font-weight: 600;
+            color: var(--dark);
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .actions-label i {
+            color: var(--warning);
+        }
+
+        .actions-container {
+            display: flex;
+            gap: 12px;
+            flex: 1;
+        }
+
+       
+        .action-button {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 18px;
+            border-radius: 30px;
+            border: none;
+            background: var(--primary-light);
+            color: var(--primary);
+            font-weight: 500;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+            white-space: nowrap;
+            position: relative;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .action-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(42, 91, 215, 0.15);
+        }
+
+        .action-button i {
+            font-size: 16px;
+        }
+
+        /* Individual action button colors */
+        .action-button[data-action="sponsorship"] {
+            background: linear-gradient(135deg, #e8edff, #d4ddff);
+            color: var(--primary);
+        }
+
+        .action-button[data-action="coupons"] {
+            background: linear-gradient(135deg, #ffe8f0, #ffd4e2);
+            color: #ff6b8b;
+        }
+
+        .action-button[data-action="internship"] {
+            background: linear-gradient(135deg, #e8f5ff, #d4e8ff);
+            color: #4b4bff;
+        }
+
+        .action-button[data-action="fund"] {
+            background: linear-gradient(135deg, #e8fff8, #d4ffef);
+            color: #00cec9;
+        }
+
+        /* Button styles */
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #1e4ac4;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background-color: white;
+            color: var(--primary);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--primary-light);
+        }
+
+        /* Content Wrapper */
+        .content-wrapper {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+            background-color: #f5f7fb;
+            min-height: 0;
+        }
+
+        /* Dashboard Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 25px;
+            min-height: min-content;
+        }
+
+        /* Analytics & Metrics Section */
+        .analytics-section {
+            grid-column: span 12;
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            margin-bottom: 25px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title i {
+            color: var(--primary);
+        }
+
+        /* Analytics Grid */
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 20px;
+        }
+
+        .analytics-card {
+            background: var(--light);
+            border-radius: 10px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s;
+        }
+
+        .analytics-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .analytics-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            margin-bottom: 15px;
+        }
+
+        .analytics-card:nth-child(1) .analytics-icon {
+            background-color: rgba(42, 91, 215, 0.1);
+            color: var(--primary);
+        }
+
+        .analytics-card:nth-child(2) .analytics-icon {
+            background-color: rgba(0, 201, 167, 0.1);
+            color: var(--secondary);
+        }
+
+        .analytics-card:nth-child(3) .analytics-icon {
+            background-color: rgba(255, 165, 2, 0.1);
+            color: var(--warning);
+        }
+
+        .analytics-card:nth-child(4) .analytics-icon {
+            background-color: rgba(46, 213, 115, 0.1);
+            color: var(--success);
+        }
+
+        .analytics-card:nth-child(5) .analytics-icon {
+            background-color: rgba(113, 88, 226, 0.1);
+            color: #7158e2;
+        }
+
+        .analytics-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--dark);
+        }
+
+        .analytics-value {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .analytics-trend {
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .trend-up {
+            color: var(--success);
+        }
+
+        .trend-down {
+            color: var(--danger);
+        }
+
+        /* Active Programs Section */
+        .programs-section {
+            grid-column: span 12;
+        }
+
+        .programs-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .programs-title {
+            font-size: 22px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .programs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .program-card {
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s;
+        }
+
+        .program-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .program-status {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            align-self: flex-start;
+        }
+
+        .status-active {
+            background-color: rgba(46, 213, 115, 0.1);
+            color: var(--success);
+        }
+
+        .status-pending {
+            background-color: rgba(255, 165, 2, 0.1);
+            color: var(--warning);
+        }
+
+        .status-ended {
+            background-color: rgba(255, 71, 87, 0.1);
+            color: var(--danger);
+        }
+
+        .program-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .program-details {
+            display: flex;
+            justify-content: space-between;
+            margin-top: auto;
+            font-size: 14px;
+            color: var(--gray);
+        }
+
+        /* Layout Grid Assignments */
+        .col-1 { grid-column: span 1; }
+        .col-2 { grid-column: span 2; }
+        .col-3 { grid-column: span 3; }
+        .col-4 { grid-column: span 4; }
+        .col-5 { grid-column: span 5; }
+        .col-6 { grid-column: span 6; }
+        .col-7 { grid-column: span 7; }
+        .col-8 { grid-column: span 8; }
+        .col-9 { grid-column: span 9; }
+        .col-10 { grid-column: span 10; }
+        .col-11 { grid-column: span 11; }
+        .col-12 { grid-column: span 12; }
+
+        /* Responsive adjustments */
+        @media (max-width: 1400px) {
+            .analytics-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 1200px) {
+            .main-content {
+                margin-left: 80px;
+            }
+            
+            .sidebar {
+                width: 80px;
+            }
+            
+            .logo-text, .nav-text, .user-details {
+                display: none;
+            }
+            
+            .logo {
+                padding: 25px 0;
+                justify-content: center;
+            }
+            
+            .nav-item {
+                padding: 20px 0;
+                justify-content: center;
+            }
+            
+            .user-info {
+                justify-content: center;
+            }
+            
+            .main-header, .quick-actions-bar {
+                padding-left: 20px;
+                padding-right: 20px;
+            }
+            
+            .content-wrapper {
+                padding: 20px;
+            }
+            
+            .analytics-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .action-button {
+                padding: 8px 15px;
+                font-size: 13px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                display: none;
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .main-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+                padding: 15px 20px;
+            }
+            
+            .header-actions {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .quick-actions-bar {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+                padding: 15px 20px;
+            }
+            
+            .actions-container {
+                width: 100%;
+                flex-wrap: wrap;
+            }
+            
+            .action-button {
+                flex: 1 1 calc(50% - 6px);
+                min-width: 140px;
+                max-width: 100%;
+            }
+            
+            .content-wrapper {
+                padding: 15px;
+            }
+            
+            .analytics-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .analytics-section, .programs-section {
+                padding: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .action-button {
+                flex: 1 1 100%;
+            }
+            
+            .main-header h1 {
+                font-size: 24px;
+            }
+            
+            .section-title {
+                font-size: 20px;
+            }
+            
+            .analytics-card {
+                padding: 15px;
+            }
+        }
+
+        /* Hidden content for other pages */
+        .page-content {
+            display: none;
+            height: 100%;
+        }
+
+        .page-content.active {
+            display: block;
+        }
+
+        /* Quick Action Modals */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background-color: white;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 500px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .modal-title {
+            font-size: 22px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: var(--gray);
+            cursor: pointer;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--dark);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+            background-color: white;
+            cursor: pointer;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 15px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+    </style>
+</head>
+<body>
+    <!-- Mobile Menu Toggle -->
+    <button class="mobile-menu-toggle" id="menuToggle">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Sidebar Navigation -->
+    <div class="sidebar" id="sidebar">
+        <a href="index.html" class="logo">
+            <div class="logo-icon"><i class="fas fa-exchange-alt"></i></div>
+            <div class="logo-text">SkillExchange</div>
+        </a>
+        
+        <div class="nav-menu">
+            <a href="sponsdash.html" class="nav-item" data-page="dashboard">
+                <i class="fas fa-tachometer-alt"></i>
+                <div class="nav-text">Dashboard</div>
+            </a>
+            <a href="sponsorship.html" class="nav-item" data-page="sponsorship">
+                <i class="fas fa-handshake"></i>
+                <div class="nav-text">Sponsorship Management</div>
+            </a>
+            <a href="talent.html" class="nav-item" data-page="talent">
+                <i class="fas fa-users"></i>
+                <div class="nav-text">Talent Pool</div>
+            </a>
+            <a href="reports.html" class="nav-item" data-page="reports">
+                <i class="fas fa-chart-line"></i>
+                <div class="nav-text">Reports & Impact</div>
+            </a>
+            <a href="profile.html" class="nav-item" data-page="profile">
+                <i class="fas fa-user-cog"></i>
+                <div class="nav-text">Profile & Settings</div>
+            </a>
+        </div>
+        
+        <div class="user-info">
+            <div class="user-avatar">TC</div>
+            <div class="user-details">
+                <h4>TechCorp Inc.</h4>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Main Content Area -->
+    <div class="main-content">
+        <!-- Header with Simplified Quick Actions -->
+        <div class="header-container">
+            <div class="main-header">
+                <h1>Sponsor Dashboard</h1>
+                <div class="header-actions">
+                    <button class="btn btn-secondary">
+                        <i class="fas fa-download"></i> Export Report
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Simplified Quick Actions Bar (4 actions only) -->
+            <div class="quick-actions-bar">
+                <div class="actions-label">
+                    <i class="fas fa-bolt"></i>
+                    <span>Quick Actions:</span>
+                </div>
+                <div class="actions-container">
+                    <button class="action-button" data-action="sponsorship">
+                        <i class="fas fa-handshake"></i>
+                        <span>New Sponsorship</span>
+                    </button>
+                    
+                    <button class="action-button" data-action="coupons">
+                        <i class="fas fa-ticket-alt"></i>
+                        <span>Generate Coupons</span>
+                    </button>
+                    
+                    <button class="action-button" data-action="internship">
+                        <i class="fas fa-briefcase"></i>
+                        <span>Post Internship</span>
+                    </button>
+                    
+                    <button class="action-button" data-action="fund">
+                        <i class="fas fa-plus-circle"></i>
+                        <span>Fund Pools</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Dashboard Content -->
+        <div class="content-wrapper">
+            <!-- Dashboard Page (Default) -->
+            <div id="dashboard" class="page-content active">
+                <!-- Analytics & Metrics Section -->
+                <div class="analytics-section">
+                    <div class="section-header">
+                        <h2 class="section-title">
+                            <i class="fas fa-chart-line"></i>
+                            Analytics & Metrics
+                        </h2>
+                        <button class="btn btn-secondary">
+                            <i class="fas fa-calendar-alt"></i> Monthly View
+                        </button>
+                    </div>
+                    
+                    <div class="analytics-grid">
+                        <!-- Credit Usage Tracking -->
+                        <div class="analytics-card">
+                            <div class="analytics-icon">
+                                <i class="fas fa-coins"></i>
+                            </div>
+                            <div class="analytics-title">Credit Usage Tracking</div>
+                            <div class="analytics-value">8,450</div>
+                            <div class="analytics-trend trend-up">
+                                <i class="fas fa-arrow-up"></i>
+                                <span>12% from last month</span>
+                            </div>
+                            <div style="font-size: 13px; color: var(--gray); margin-top: 5px;">
+                                Credits used this month
+                            </div>
+                        </div>
+                        
+                        <!-- Popular Skills Analytics -->
+                        <div class="analytics-card">
+                            <div class="analytics-icon">
+                                <i class="fas fa-chart-bar"></i>
+                            </div>
+                            <div class="analytics-title">Popular Skills Analytics</div>
+                            <div class="analytics-value">42</div>
+                            <div class="analytics-trend trend-up">
+                                <i class="fas fa-arrow-up"></i>
+                                <span>8% increase</span>
+                            </div>
+                            <div style="font-size: 13px; color: var(--gray); margin-top: 5px;">
+                                High-demand skills
+                            </div>
+                        </div>
+
+                        
+                        <!-- Impact Reports -->
+                        <div class="analytics-card">
+                            <div class="analytics-icon">
+                                <i class="fas fa-file-contract"></i>
+                            </div>
+                            <div class="analytics-title">Impact Reports</div>
+                            <div class="analytics-value">4</div>
+                            <div class="analytics-trend trend-up">
+                                <i class="fas fa-check-circle"></i>
+                                <span>Q3 2023 available</span>
+                            </div>
+                            <div style="font-size: 13px; color: var(--gray); margin-top: 5px;">
+                                Monthly/Quarterly reports
+                            </div>
+                        </div>
+                        
+                        <!-- Participation Metrics -->
+                        <div class="analytics-card">
+                            <div class="analytics-icon">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <div class="analytics-title">Participation Metrics</div>
+                            <div class="analytics-value">89%</div>
+                            <div class="analytics-trend trend-down">
+                                <i class="fas fa-arrow-down"></i>
+                                <span>2% from last month</span>
+                            </div>
+                            <div style="font-size: 13px; color: var(--gray); margin-top: 5px;">
+                                Funded programs engagement
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Active Programs Section -->
+                <div class="programs-section">
+                    <div class="programs-header">
+                        <h2 class="programs-title">Active Programs Overview</h2>
+                        <button class="btn btn-primary">
+                            <i class="fas fa-plus"></i> Add New Program
+                        </button>
+                    </div>
+                    
+                    <div class="programs-grid">
+                        <div class="program-card">
+                            <div class="program-status status-active">Active</div>
+                            <div class="program-title">Tech Scholarship Program 2023</div>
+                            <p style="color: var(--gray); margin-bottom: 15px; font-size: 14px;">
+                                Funding scholarships for 50 students in software development
+                            </p>
+                            <div class="program-details">
+                                <div><i class="fas fa-user-graduate"></i> 42/50 Students</div>
+                                <div><i class="fas fa-calendar"></i> Ends: Dec 15, 2023</div>
+                            </div>
+                        </div>
+                        
+                        <div class="program-card">
+                            <div class="program-status status-active">Active</div>
+                            <div class="program-title">Data Science Internship</div>
+                            <p style="color: var(--gray); margin-bottom: 15px; font-size: 14px;">
+                                12-week paid internship for data science learners
+                            </p>
+                            <div class="program-details">
+                                <div><i class="fas fa-users"></i> 8 Interns</div>
+                                <div><i class="fas fa-calendar"></i> Ends: Jan 30, 2024</div>
+                            </div>
+                        </div>
+                        
+                        <div class="program-card">
+                            <div class="program-status status-pending">Pending</div>
+                            <div class="program-title">AI Workshop Series</div>
+                            <p style="color: var(--gray); margin-bottom: 15px; font-size: 14px;">
+                                Monthly workshops on AI/ML for community members
+                            </p>
+                            <div class="program-details">
+                                <div><i class="fas fa-users"></i> Starts Nov 2023</div>
+                                <div><i class="fas fa-calendar"></i> Approval pending</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Other pages (hidden by default) -->
+            <div id="sponsorship" class="page-content">
+                <h1 class="section-title">Sponsorship Management</h1>
+                <p style="margin-bottom: 25px; color: var(--gray);">Create, edit, and track your scholarship programs and reward coupons.</p>
+                
+                <div class="header-actions" style="margin-bottom: 30px;">
+                    <button class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Create Scholarship Program
+                    </button>
+                    <button class="btn btn-secondary">
+                        <i class="fas fa-gift"></i> Manage Reward Coupons
+                    </button>
+                </div>
+                
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Program Name</th>
+                                <th>Type</th>
+                                <th>Status</th>
+                                <th>Participants</th>
+                                <th>Start Date</th>
+                                <th>End Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Tech Scholarship Program 2023</td>
+                                <td>Scholarship</td>
+                                <td><span class="status-active program-status">Active</span></td>
+                                <td>42/50</td>
+                                <td>Jan 15, 2023</td>
+                                <td>Dec 15, 2023</td>
+                                <td>
+                                    <button class="btn btn-secondary" style="padding: 5px 10px; font-size: 12px;">Edit</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Data Science Internship</td>
+                                <td>Internship</td>
+                                <td><span class="status-active program-status">Active</span></td>
+                                <td>8/10</td>
+                                <td>Aug 1, 2023</td>
+                                <td>Jan 30, 2024</td>
+                                <td>
+                                    <button class="btn btn-secondary" style="padding: 5px 10px; font-size: 12px;">Edit</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Action Modals -->
+    <div id="sponsorship-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Create New Sponsorship</div>
+                <button class="modal-close">&times;</button>
+            </div>
+            <form id="sponsorship-form">
+                <div class="form-group">
+                    <label class="form-label">Sponsorship Type</label>
+                    <select class="form-select" required>
+                        <option value="">Select type</option>
+                        <option value="scholarship">Scholarship Program</option>
+                        <option value="event">Event Sponsorship</option>
+                        <option value="workshop">Workshop/Webinar</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Program Name</label>
+                    <input type="text" class="form-input" placeholder="Enter program name" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Budget Allocation</label>
+                        <input type="number" class="form-input" placeholder="Enter amount" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Duration (months)</label>
+                        <input type="number" class="form-input" placeholder="Duration in months" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Description</label>
+                    <textarea class="form-input" rows="3" placeholder="Enter program description"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Create Sponsorship</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="coupons-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Generate Reward Coupons</div>
+                <button class="modal-close">&times;</button>
+            </div>
+            <form id="coupons-form">
+                <div class="form-group">
+                    <label class="form-label">Coupon Type</label>
+                    <select class="form-select" required>
+                        <option value="">Select type</option>
+                        <option value="discount">Discount Code</option>
+                        <option value="free">Free Access</option>
+                        <option value="credit">Credit Bonus</option>
+                    </select>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Number of Coupons</label>
+                        <input type="number" class="form-input" placeholder="How many coupons?" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Value/Discount</label>
+                        <input type="text" class="form-input" placeholder="e.g., 20% or $50" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Expiration Date</label>
+                    <input type="date" class="form-input" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Generate Coupons</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Navigation functionality
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.nav-item').forEach(nav => {
+                    nav.classList.remove('active');
+                });
+                this.classList.add('active');
+                
+                document.querySelectorAll('.page-content').forEach(page => {
+                    page.classList.remove('active');
+                });
+                
+                const pageId = this.getAttribute('data-page');
+                document.getElementById(pageId).classList.add('active');
+            });
+        });
+
+        // Quick Action Buttons functionality
+        document.querySelectorAll('.action-button').forEach(button => {
+            button.addEventListener('click', function() {
+                const actionType = this.getAttribute('data-action');
+                handleQuickAction(actionType);
+            });
+        });
+
+        // Handle quick actions
+        function handleQuickAction(actionType) {
+            const actionTitles = {
+                'sponsorship': 'Create New Sponsorship',
+                'coupons': 'Generate Reward Coupons',
+                'internship': 'Post Internship Opportunities',
+                'fund': 'Fund Credit Pools'
+            };
+            
+            const actionDescriptions = {
+                'sponsorship': 'Set up a new scholarship, event, or workshop sponsorship.',
+                'coupons': 'Create discount codes and rewards for program participants.',
+                'internship': 'Post internship positions for skilled learners and graduates.',
+                'fund': 'Add credits to your sponsorship pool for funding programs.'
+            };
+            
+            // Show action confirmation
+            const modal = createActionModal(actionTitles[actionType], actionDescriptions[actionType]);
+            document.body.appendChild(modal);
+            
+            // Show modal with animation
+            setTimeout(() => {
+                modal.style.display = 'flex';
+            }, 10);
+        }
+
+        // Create modal for quick actions
+        function createActionModal(title, description) {
+            const modal = document.createElement('div');
+            modal.className = 'modal-overlay';
+            modal.style.display = 'none';
+            
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <div class="modal-title">${title}</div>
+                        <button class="modal-close">&times;</button>
+                    </div>
+                    <div style="margin-bottom: 25px; color: var(--gray);">
+                        ${description}
+                    </div>
+                    <div style="display: flex; gap: 15px;">
+                        <button class="btn btn-secondary" id="cancel-action" style="flex: 1;">Cancel</button>
+                        <button class="btn btn-primary" id="confirm-action" style="flex: 1;">Continue</button>
+                    </div>
+                </div>
+            `;
+            
+            // Close modal functionality
+            modal.querySelector('.modal-close').addEventListener('click', () => {
+                modal.style.display = 'none';
+                setTimeout(() => modal.remove(), 300);
+            });
+            
+            modal.addEventListener('click', (e) => {
+                if (e.target.classList.contains('modal-overlay')) {
+                    modal.style.display = 'none';
+                    setTimeout(() => modal.remove(), 300);
+                }
+            });
+            
+            // Cancel button
+            modal.querySelector('#cancel-action').addEventListener('click', () => {
+                modal.style.display = 'none';
+                setTimeout(() => modal.remove(), 300);
+            });
+            
+            // Confirm button
+            modal.querySelector('#confirm-action').addEventListener('click', () => {
+                modal.style.display = 'none';
+                setTimeout(() => modal.remove(), 300);
+                alert(`Starting "${title}" action... In a full implementation, this would open the appropriate form.`);
+            });
+            
+            return modal;
+        }
+
+        // Simulate animation on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add subtle animation to quick action buttons
+            const actionButtons = document.querySelectorAll('.action-button');
+            actionButtons.forEach((button, index) => {
+                button.style.opacity = '0';
+                button.style.transform = 'translateY(10px)';
+                
+                setTimeout(() => {
+                    button.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                    button.style.opacity = '1';
+                    button.style.transform = 'translateY(0)';
+                }, 100 * index);
+            });
+            
+            // Add animation to analytics cards
+            const analyticsCards = document.querySelectorAll('.analytics-card');
+            analyticsCards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(15px)';
+                
+                setTimeout(() => {
+                    card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, 200 + (100 * index));
+            });
+        });
+    </script>
+</body>
+</html>

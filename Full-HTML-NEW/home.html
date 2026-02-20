@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkillSwap - Landing Page</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: #f9fafb;
+            color: #111;
+            min-height: 100vh;
+        }
+
+        /* Navigation */
+        .nav {
+            background: rgba(255, 255, 255, 0.95);
+            border-bottom: 1px solid #e2e8f0;
+            backdrop-filter: blur(6px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            padding: 10px 0;
+        }
+
+        .nav-container {
+            max-width: 1100px;
+            margin: auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            font-size: 22px;
+            font-weight: 600;
+            color: #4f46e5;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: #4b5563;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 8px 12px;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+
+        .nav-link:hover {
+            background: #f3f4f6;
+            color: #4f46e5;
+        }
+
+        /* Search Bar */
+        .search-container {
+            position: relative;
+            width: 300px;
+        }
+
+        .search-bar {
+            width: 100%;
+            padding: 10px 15px 10px 40px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+            transition: all 0.2s;
+        }
+
+        .search-bar:focus {
+            outline: none;
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9ca3af;
+        }
+
+        .search-results {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            margin-top: 5px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            display: none;
+            z-index: 1000;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .search-result-item {
+            padding: 12px 15px;
+            border-bottom: 1px solid #f3f4f6;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .search-result-item:hover {
+            background: #f9fafb;
+        }
+
+        .search-result-item:last-child {
+            border-bottom: none;
+        }
+
+        .result-category {
+            font-size: 11px;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 2px;
+        }
+
+        .result-name {
+            font-weight: 500;
+            color: #1f2937;
+        }
+
+        .result-desc {
+            font-size: 12px;
+            color: #6b7280;
+            margin-top: 2px;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            border: none;
+        }
+
+        .btn.primary {
+            background: #4f46e5;
+            color: white;
+        }
+
+        .btn.primary:hover {
+            background: #4338ca;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+        }
+
+        .btn.ghost {
+            background: transparent;
+            border: 1px solid #d1d5db;
+            color: #4b5563;
+        }
+
+        .btn.ghost:hover {
+            background: #f9fafb;
+            border-color: #9ca3af;
+        }
+
+        .btn.large {
+            padding: 12px 28px;
+            font-size: 16px;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 80px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .badge {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 20px;
+            margin-bottom: 20px;
+            font-weight: 500;
+            font-size: 14px;
+            backdrop-filter: blur(10px);
+        }
+
+        .hero h1 {
+            font-size: 44px;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        .hero .subtitle {
+            max-width: 600px;
+            margin: 0 auto 30px;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 18px;
+            line-height: 1.6;
+        }
+
+        .hero-search {
+            max-width: 500px;
+            margin: 40px auto 0;
+        }
+
+        /* Sections */
+        .section {
+            padding: 70px 20px;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 36px;
+            margin-bottom: 10px;
+            color: #1f2937;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            margin-bottom: 40px;
+            color: #6b7280;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Skills Grid */
+        .skills-grid {
+            max-width: 1100px;
+            margin: 40px auto;
+            display: grid;
+            gap: 25px;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        }
+
+        .skill-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .skill-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+            border-color: #4f46e5;
+        }
+
+        .skill-icon {
+            width: 70px;
+            height: 70px;
+            background: #e0e7ff;
+            border-radius: 12px;
+            margin: 0 auto 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #4f46e5;
+            font-size: 32px;
+        }
+
+        .skill-card h3 {
+            margin-bottom: 12px;
+            color: #1f2937;
+        }
+
+        .skill-card p {
+            color: #6b7280;
+            line-height: 1.5;
+            font-size: 14px;
+        }
+
+        .skill-count {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 4px 12px;
+            background: #f3f4f6;
+            border-radius: 12px;
+            font-size: 12px;
+            color: #6b7280;
+        }
+
+        /* Mission Section */
+        .mission {
+            background: #f8fafc;
+        }
+
+        .mission-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .mission-stats {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 36px;
+            font-weight: bold;
+            color: #4f46e5;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #6b7280;
+        }
+
+        /* Contact Section */
+        .contact-section {
+            padding: 70px 20px;
+            background: #f8fafc;
+        }
+
+        .contact-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            max-width: 1100px;
+            margin: 0 auto;
+            align-items: start;
+        }
+
+        @media (max-width: 768px) {
+            .contact-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .contact-form {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #374151;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border 0.2s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        /* Contact Image */
+        .contact-image {
+            width: 100%;
+            height: 400px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        .contact-image-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+        }
+
+        .contact-image-text {
+            font-size: 18px;
+            font-weight: 500;
+            text-align: center;
+            padding: 0 20px;
+        }
+
+        /* FAQ Section */
+        .faq-section {
+            padding: 70px 20px;
+            background: #f8fafc;
+        }
+
+        .faq-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            background: white;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #e5e7eb;
+            overflow: hidden;
+        }
+
+        .faq-question {
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            font-weight: 600;
+            color: #1f2937;
+            transition: background 0.3s ease;
+        }
+
+        .faq-question:hover {
+            background: #f9fafb;
+        }
+
+        .faq-icon {
+            transition: transform 0.3s ease;
+        }
+
+        .faq-item.active .faq-icon {
+            transform: rotate(45deg);
+        }
+
+        .faq-answer {
+            padding: 0 20px;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            color: #6b7280;
+            line-height: 1.6;
+        }
+
+        .faq-item.active .faq-answer {
+            padding: 0 20px 20px;
+            max-height: 500px;
+        }
+
+        /* Footer */
+        footer {
+            background: #1f2937;
+            color: white;
+            padding: 50px 20px 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: white;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 15px;
+        }
+
+        .footer-links h4 {
+            font-size: 18px;
+            margin-bottom: 15px;
+            color: white;
+        }
+
+        .footer-links ul {
+            list-style: none;
+        }
+
+        .footer-links ul li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links ul li a {
+            color: #9ca3af;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links ul li a:hover {
+            color: white;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #374151;
+            color: #9ca3af;
+            font-size: 14px;
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                gap: 15px;
+                padding: 15px 20px;
+            }
+
+            .search-container {
+                width: 100%;
+                max-width: 400px;
+            }
+
+            .nav-links {
+                gap: 15px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .hero h1 {
+                font-size: 32px;
+            }
+
+            .skills-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .mission-stats {
+                gap: 20px;
+            }
+
+            .contact-image {
+                height: 300px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-container">
+            <a href="#" class="logo">
+                <svg width="28" height="28" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M2 4a2 2 0 0 1 2-2h6v18H4a2 2 0 0 1-2-2V4zm10-2h6a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-6V2z"/>
+                </svg>
+                <span>SkillSwap</span>
+            </a>
+
+            <div class="nav-links">
+                <a href="#browse" class="nav-link">Browse Skills</a>
+                <a href="#mission" class="nav-link">Mission</a>
+                <a href="#contact" class="nav-link">Contact</a>
+                
+                <div class="search-container">
+                    <svg class="search-icon" width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M10 2a8 8 0 0 1 6.32 12.906l5.387 5.387-1.414 1.414-5.387-5.387A8 8 0 1 1 10 2zm0 2a6 6 0 1 0 0 12 6 6 0 0 0 0-12z"/>
+                    </svg>
+                    <input type="text" class="search-bar" placeholder="Search skills, tutors, topics..." id="searchInput">
+                    <div class="search-results" id="searchResults"></div>
+                </div>
+
+                <a class="btn ghost" id="loginBtn">Login</a>
+                <a class="btn primary" id="signupBtn">Sign Up</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <span class="badge">Year of Community 2025</span>
+            <h1>Share Skills, Build Community,<br>Grow Together</h1>
+            <p class="subtitle">
+                Join the UAE's premier skill-sharing platform. Connect with your community,
+                learn new skills, and share your expertise—all in one place.
+            </p>
+            <div class="hero-search">
+                <input type="text" class="search-bar" placeholder="What skill would you like to learn or teach?" id="heroSearchInput">
+            </div>
+        </div>
+    </section>
+
+    <!-- Browse Skills Section -->
+    <section class="section" id="browse">
+        <h2 class="section-title">Browse Skills</h2>
+        <p class="section-subtitle">Discover and explore skills available in our community</p>
+
+        <div class="skills-grid">
+            <div class="skill-card" onclick="searchSkill('coding')">
+                <div class="skill-icon">
+                    <svg width="32" height="32" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M20 3H4a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1zM8 17H6v-2h2v2zm0-4H6v-2h2v2zm0-4H6V7h2v2zm6 8h-4v-2h4v2zm3-4h-2v-2h2v2zm0-4h-2V7h2v2z"/>
+                    </svg>
+                </div>
+                <h3>Coding & Tech</h3>
+                <p>Web development, mobile apps, data science, and programming languages</p>
+                <span class="skill-count">45+ skills</span>
+            </div>
+
+            <div class="skill-card" onclick="searchSkill('cooking')">
+                <div class="skill-icon">
+                    <svg width="32" height="32" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2a8 8 0 0 1 8 8c0 2.8-1.6 5.2-4 6.4V22h-8v-5.6c-2.4-1.2-4-3.6-4-6.4a8 8 0 0 1 8-8zm0 2a6 6 0 0 0-6 6c0 2.2 1.2 4.2 3 5.3V20h6v-4.7c1.8-1.1 3-3.1 3-5.3a6 6 0 0 0-6-6z"/>
+                    </svg>
+                </div>
+                <h3>Cooking & Baking</h3>
+                <p>Local cuisine, baking techniques, meal prep, and culinary skills</p>
+                <span class="skill-count">38+ skills</span>
+            </div>
+
+            <div class="skill-card" onclick="searchSkill('language')">
+                <div class="skill-icon">
+                    <svg width="32" height="32" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm-2 15.9v-1.8c-1.2 0-2.3-.2-3.3-.6l-.5 1.5c1.2.5 2.5.8 3.8.9zm6.8-2.5c-.5.9-1.1 1.8-1.8 2.5l1.3 1.3c.9-.8 1.6-1.7 2.2-2.8l-1.7-.8zM12 4c2.1 0 4 .8 5.5 2.1l-1.2 1.2C15.3 6.5 13.7 6 12 6s-3.3.5-4.3 1.3L6.5 6.1C8 4.8 9.9 4 12 4zm-7.5 9.8c.5-.9 1.1-1.8 1.8-2.5L4.9 9.9c-.9.8-1.6 1.7-2.2 2.8l1.7.8z"/>
+                    </svg>
+                </div>
+                <h3>Languages</h3>
+                <p>Arabic, English, French, Spanish, and other language learning</p>
+                <span class="skill-count">28+ skills</span>
+            </div>
+
+            <div class="skill-card" onclick="searchSkill('art')">
+                <div class="skill-icon">
+                    <svg width="32" height="32" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm0 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16zm-1-11h2v2h-2V9zm0 4h2v6h-2v-6z"/>
+                    </svg>
+                </div>
+                <h3>Arts & Crafts</h3>
+                <p>Painting, calligraphy, pottery, knitting, and creative arts</p>
+                <span class="skill-count">32+ skills</span>
+            </div>
+
+            <div class="skill-card" onclick="searchSkill('business')">
+                <div class="skill-icon">
+                    <svg width="32" height="32" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M20 6h-4V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2zm-6 0h-4V4h4v2z"/>
+                    </svg>
+                </div>
+                <h3>Business Skills</h3>
+                <p>Marketing, finance, entrepreneurship, and professional development</p>
+                <span class="skill-count">41+ skills</span>
+            </div>
+
+            <div class="skill-card" onclick="searchSkill('fitness')">
+                <div class="skill-icon">
+                    <svg width="32" height="32" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm-2 15l-5-5 1.4-1.4 3.6 3.6 7.6-7.6L19 8l-9 9z"/>
+                    </svg>
+                </div>
+                <h3>Fitness & Wellness</h3>
+                <p>Yoga, meditation, personal training, nutrition, and mental health</p>
+                <span class="skill-count">29+ skills</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Mission Section -->
+    <section class="section mission" id="mission">
+        <div class="mission-content">
+            <h2 class="section-title">Our Mission</h2>
+            <p class="section-subtitle">
+                To empower communities through skill-sharing, creating meaningful connections 
+                and fostering lifelong learning in the UAE and beyond.
+            </p>
+            
+            <div class="mission-stats">
+                <div class="stat">
+                    <span class="stat-number">1,250+</span>
+                    <span class="stat-label">Active Members</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">320+</span>
+                    <span class="stat-label">Skills Available</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">5,400+</span>
+                    <span class="stat-label">Hours Shared</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">98%</span>
+                    <span class="stat-label">Satisfaction Rate</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact-section" id="contact">
+        <h2 class="section-title">Contact Us</h2>
+        <p class="section-subtitle">Have questions or suggestions? Get in touch with our team</p>
+        
+        <div class="contact-content">
+            <div class="contact-form">
+                <form id="contactForm">
+                    <div class="form-group">
+                        <label for="name">Full Name</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="subject">Subject</label>
+                        <select id="subject" name="subject" required>
+                            <option value="">Select a topic</option>
+                            <option value="general">General Inquiry</option>
+                            <option value="partnership">Partnership Opportunity</option>
+                            <option value="support">Technical Support</option>
+                            <option value="feedback">Platform Feedback</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="message">Message</label>
+                        <textarea id="message" name="message" required></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn primary" style="width: 100%;">Send Message</button>
+                </form>
+            </div>
+            
+            <div class="contact-image">
+                <div class="contact-image-icon">👥</div>
+                <div class="contact-image-text">SkillSwap Community Team</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq-section">
+        <div class="faq-container">
+            <h2 class="section-title">Frequently Asked Questions</h2>
+            <p class="section-subtitle">Find quick answers to common questions about SkillSwap</p>
+            
+            <div class="faq-list">
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>How do I get started on SkillSwap?</span>
+                        <svg class="faq-icon" width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+                        </svg>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Getting started is easy! Simply sign up for a free account, create your profile highlighting your skills and interests, and start browsing available skills or offering your own expertise to the community.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Is SkillSwap completely free to use?</span>
+                        <svg class="faq-icon" width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+                        </svg>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Yes! SkillSwap is completely free for basic usage. We operate on a credit system where you earn credits by teaching others and spend credits to learn new skills. Premium features are available for those who want additional benefits.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>How does the skill credit system work?</span>
+                        <svg class="faq-icon" width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+                        </svg>
+                    </div>
+                    <div class="faq-answer">
+                        <p>When you teach a skill, you earn credits based on the session duration and complexity. You can then use these credits to learn other skills from community members. This creates a balanced ecosystem of giving and receiving knowledge.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Can I use SkillSwap for professional development?</span>
+                        <svg class="faq-icon" width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+                        </svg>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Absolutely! Many professionals use SkillSwap to enhance their skills, network with others in their industry, and even find mentorship opportunities. We offer specialized categories for business and professional skills.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div>
+                    <a href="index.html" class="footer-logo">SkillSwap UAE</a>
+                    <p>Address the upskilling crisis with AI-driven peer-to-peer skills exchange in the UAE.</p>
+                    <div style="margin-top: 20px; display: flex; gap: 15px;">
+                        <a href="#" style="color: white; font-size: 1.5rem;"><i class="fab fa-twitter"></i></a>
+                        <a href="#" style="color: white; font-size: 1.5rem;"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" style="color: white; font-size: 1.5rem;"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-links">
+                    <h4>Platform</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="browse-skills.html">Browse Skills</a></li>
+                        <li><a href="ai-matching.html">AI Matching</a></li>
+                        <li><a href="dashboard-learner.html">Dashboard</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-links">
+                    <h4>Account</h4>
+                    <ul>
+                        <li><a href="#">Log In</a></li>
+                        <li><a href="#">Sign Up</a></li>
+                        <li><a href="profile-learner.html">My Profile</a></li>
+                        <li><a href="#">Settings</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-links">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">Contact Us</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2023 SkillSwap UAE. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Sample database of skills
+        const skillsDatabase = [
+            { id: 1, name: "Web Development", category: "Coding & Tech", description: "Learn HTML, CSS, JavaScript and build modern websites" },
+            { id: 2, name: "Python Programming", category: "Coding & Tech", description: "From basics to advanced Python applications" },
+            { id: 3, name: "Mobile App Development", category: "Coding & Tech", description: "Build iOS and Android apps with React Native" },
+            { id: 4, name: "Emirati Cuisine", category: "Cooking & Baking", description: "Traditional UAE dishes and cooking techniques" },
+            { id: 5, name: "Arabic Language", category: "Languages", description: "Modern Standard Arabic and local dialects" },
+            { id: 6, name: "Arabic Calligraphy", category: "Arts & Crafts", description: "Traditional Arabic calligraphy styles" },
+            { id: 7, name: "Digital Marketing", category: "Business Skills", description: "Social media, SEO, and online advertising" },
+            { id: 8, name: "Yoga & Meditation", category: "Fitness & Wellness", description: "Mindfulness practices and yoga techniques" },
+            { id: 9, name: "Financial Planning", category: "Business Skills", description: "Personal finance and investment strategies" },
+            { id: 10, name: "Baking Techniques", category: "Cooking & Baking", description: "Professional baking and pastry making" },
+            { id: 11, name: "UI/UX Design", category: "Coding & Tech", description: "User interface and experience design principles" },
+            { id: 12, name: "Public Speaking", category: "Business Skills", description: "Confidence building and presentation skills" }
+        ];
+
+        // Navigation
+        document.getElementById('loginBtn').addEventListener('click', function() {
+            window.location.href = 'login.html';
+        });
+        
+        document.getElementById('signupBtn').addEventListener('click', function() {
+            window.location.href = 'register.html';
+        });
+        
+
+        // Search functionality
+        const searchInput = document.getElementById('searchInput');
+        const heroSearchInput = document.getElementById('heroSearchInput');
+        const searchResults = document.getElementById('searchResults');
+
+        function searchSkills(query) {
+            if (!query.trim()) {
+                searchResults.style.display = 'none';
+                return;
+            }
+
+            const filteredSkills = skillsDatabase.filter(skill => 
+                skill.name.toLowerCase().includes(query.toLowerCase()) ||
+                skill.category.toLowerCase().includes(query.toLowerCase()) ||
+                skill.description.toLowerCase().includes(query.toLowerCase())
+            );
+
+            displaySearchResults(filteredSkills);
+        }
+
+        function displaySearchResults(results) {
+            if (results.length === 0) {
+                searchResults.innerHTML = `
+                    <div class="search-result-item">
+                        <div class="result-name">No skills found</div>
+                        <div class="result-desc">Try searching for something else</div>
+                    </div>
+                `;
+            } else {
+                searchResults.innerHTML = results.map(skill => `
+                    <div class="search-result-item" onclick="selectSkill(${skill.id})">
+                        <div class="result-category">${skill.category}</div>
+                        <div class="result-name">${skill.name}</div>
+                        <div class="result-desc">${skill.description}</div>
+                    </div>
+                `).join('');
+            }
+            searchResults.style.display = 'block';
+        }
+
+        function selectSkill(skillId) {
+            const skill = skillsDatabase.find(s => s.id === skillId);
+            if (skill) {
+                alert(`Selected: ${skill.name}\nCategory: ${skill.category}\n\n${skill.description}`);
+                searchInput.value = skill.name;
+                searchResults.style.display = 'none';
+            }
+        }
+
+        function searchSkill(query) {
+            searchInput.value = query;
+            searchSkills(query);
+        }
+
+        // Event listeners
+        searchInput.addEventListener('input', (e) => {
+            searchSkills(e.target.value);
+        });
+
+        heroSearchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                searchSkills(e.target.value);
+            }
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
+                searchResults.style.display = 'none';
+            }
+        });
+
+        // Contact form
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Thank you for your message! We will get back to you soon.');
+            this.reset();
+        });
+
+        // FAQ functionality
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', () => {
+                const item = question.parentElement;
+                item.classList.toggle('active');
+                
+                document.querySelectorAll('.faq-item').forEach(otherItem => {
+                    if (otherItem !== item && otherItem.classList.contains('active')) {
+                        otherItem.classList.remove('active');
+                    }
+                });
+            });
+        });
+
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
